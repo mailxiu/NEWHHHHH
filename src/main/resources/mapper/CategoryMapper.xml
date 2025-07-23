@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.CategoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Category">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="image" column="image" jdbcType="VARCHAR"/>
+            <result property="purchase" column="purchase" jdbcType="TINYINT"/>
+            <result property="notes" column="notes" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,name,
+        image,purchase,notes,
+        state
+    </sql>
+</mapper>

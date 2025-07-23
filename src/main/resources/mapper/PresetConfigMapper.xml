@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.PresetConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.PresetConfig">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="defaultPortrait" column="default_portrait" jdbcType="VARCHAR"/>
+            <result property="projectPortrait" column="project_portrait" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,default_portrait,project_portrait
+    </sql>
+</mapper>

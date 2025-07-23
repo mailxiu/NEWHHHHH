@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+    <meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+    <title>云上回收 - 业内领先的瓶盖回收平台！</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="stylesheet" type="text/css" href="/css/materialdesignicons.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/editor.md/css/editormd.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.min.css">
+    <style>
+        body {
+            /* 关键修改：将背景色改为背景图片并设置全屏属性 */
+            background-image: url("/mobile/bg.jpg");
+            background-color: #F8F8F8; /* 备用背景色 */
+            background-size: cover; /* 图片拉伸铺满 */
+            background-position: center; /* 图片居中 */
+            background-repeat: no-repeat; /* 不重复平铺 */
+            background-attachment: fixed; /* 固定背景不随滚动移动 */
+            min-height: 100vh; /* 确保背景覆盖整个视口高度 */
+            margin: 0; /* 去除默认边距 */
+            padding: 0; /* 去除默认内边距 */
+        }
+
+        /* 动画定义 */
+        @keyframes zoomInOut {
+            0%, 100% {
+                transform: scale(1); /* 初始及结束时为原始大小 */
+            }
+            50% {
+                transform: scale(1.02); /* 放大到1.02倍 */
+            }
+        }
+
+        .animate {
+            animation: zoomInOut 1.5s infinite; /* 持续时间为1.5秒，无限循环 */
+        }
+
+        .btn{
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .code{
+            box-sizing: border-box;
+            margin-left: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 5px;
+            background: #388e3c;
+        }
+    </style>
+</head>
+
+<body>
+<div class="row"
+     style="position: relative;display: flex;flex-direction: column;align-items: center;padding-top: 30%">
+
+
+    <img style="width: 25%;border-radius: 35px;margin-bottom: 30px" src="/mobile/banIco.png">
+
+    <div th:if="${!isWeChat}" style="width: 85%;height: auto;border-radius: 15px;background-color: #FFFFFF;display: flex;flex-direction: column;align-items: center;margin-top: 30px;padding: 5px 0px;box-sizing: border-box">
+
+        <div style="width: 90%;height: auto;display: flex;flex-direction: row;align-items: center;padding: 10px;box-sizing: border-box">
+            <span style="white-space: nowrap">手机号：</span>
+            <input style="flex: 1;height: 45px;border:none;border-bottom: 1px solid #cdcdcd;outline: none" name="phone"
+                   type="number" placeholder="请输入手机号">
+        </div>
+
+        <div style="width: 90%;height: auto;display: flex;flex-direction: row;align-items: center;padding: 10px;box-sizing: border-box;margin-top: 20px">
+            <span style="white-space: nowrap">验证码：</span>
+            <input style="flex: 1;height: 45px;border:none;border-bottom: 1px solid #cdcdcd;outline: none" name="code"
+                   type="number" placeholder="验证码">
+            <span id="sendCode" class="code"
+                  style="color: white;white-space: nowrap;">获取验证码</span>
+        </div>
+
+    </div>
+
+    <div th:if="${!isWeChat}" id="register" class="animate btn"  style="width: 80%;height: 50px;background-color: #66bb6a;border-radius: 45px;margin: 0 auto;margin-top: 30px">
+        注册并使用
+    </div>
+
+    <img id="wxLoginBtn" th:if="${isWeChat}" class="animate" style="width: 45%;margin-top: 50px;"
+         src="/mobile/auth.png">
+
+    <p th:if="${!isWeChat}" id="phone_lag"
+       style="width: auto;margin: 0 auto;margin-top: 50px;white-space: nowrap;color: #228c3e">推荐人：173*****135</p>
+
+    <input type="hidden" name="invitation_phone" th:value="${invitation_phone}">
+
+    <input type="hidden" name="service_url" th:value="${service_url}">
+
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script type="text/javascript" src="/js/layer/layer.js"></script>
+
+<script>
+    var verification = false;
+
+    var invitation_phone = $("input[name='invitation_phone']").val();
+
+    var maskedPhone = maskPhoneNumber(invitation_phone);
+
+    $("#phone_lag").text("推荐人:" + maskedPhone)
+
+    $("#sendCode").click(function () {
+
+        var phone = $("input[name='phone']").val();
+
+        if (verification) {
+            layer.msg('请稍后获取验证码');
+            return false;
+        }
+
+        if (validateMobile(phone)) {
+
+            verification = true;
+
+            $.ajax({
+                url: '/open/send_code',
+                type: 'get',
+                data: {
+                    phone: phone,
+                },
+                dataType: 'html',
+                traditional: true,
+
+                success: function (res) {
+
+                    let data = JSON.parse(res);
+
+                    if (data.code != 20000) {
+                        layer.msg(data.msg)
+                    }else{
+                        clock();
+                    }
+                }
+            });
+        } else {
+            layer.msg('手机号码有误');
+        }
+
+    });
+
+
+    $("#register").click(function () {
+
+        var register_phone = $("input[name='phone']").val();
+
+        var verification_code = $("input[name='code']").val();
+
+        var invitation_phone = $("input[name='invitation_phone']").val();
+
+        $.ajax({
+            url: '/open/invitation_register',
+            type: 'get',
+            data: {
+                register_phone: register_phone,
+                invitation_phone: invitation_phone,
+                verification_code: verification_code,
+            },
+            dataType: 'html',
+            traditional: true,
+
+            success: function (res) {
+
+                let data = JSON.parse(res);
+
+                layer.msg(data.msg);
+
+                if (data.code == 20000) {
+                    window.location.href = 'https://www.pgyer.com/yshs';
+                }
+
+            }
+        });
+    });
+
+    function maskPhoneNumber(phoneNumber) {
+        return phoneNumber.slice(0, 3) + '******' + phoneNumber.slice(-3);
+    }
+
+    function clock() {
+
+        var time = 60;
+
+        var myInterval = setInterval(function () {
+            time--;
+
+            $("#sendCode").text(time);
+
+            if (time == 0) {
+                clearInterval(myInterval);
+                verification = false;
+                $("#sendCode").text("获取验证码");
+            }
+
+        }, 1000);
+    }
+
+    function validateMobile(mobile) {
+        const mobileRegex = /^1[3-9]\d{9}$/;
+        return mobileRegex.test(mobile);
+    }
+</script>
+
+<script th:if="${isWeChat}" type="text/javascript">
+    var service_url = $("input[name='service_url']").val();
+    document.getElementById('wxLoginBtn').addEventListener('click', function () {
+        var appId = 'wx4655d47b203d7b26';
+        var redirectUri = encodeURIComponent(service_url + '/open/register_authorization');
+        var scope = 'snsapi_userinfo';
+        var state = invitation_phone
+
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+    });
+</script>
+
+</body>
+</html>

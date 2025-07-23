@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+  <meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+  <title>文档列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link href="js/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="js/bootstrap-select/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">收码记录</div></header>
+        <div class="card-body">
+          <div class="card-search mb-2-5">
+            <form id="search_form" class="search-form" method="post" action="/record_list" role="form">
+              <input type="hidden" name="size" th:value="${iPage.size}">
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label">时间范围</label>
+                    <div class="col-sm-8">
+                      <input type="text" id="reportrange" name="time" th:value="${session.record_time}" placeholder="请选择时间范围" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 项目条码</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="bar_code" th:value="${session.record_bar_code}" placeholder="请输入项目条码" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 用户UID</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="uid" th:value="${session.record_uid}" placeholder="请输入用户UID" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 导出状态</label>
+                    <div class="col-sm-8">
+                      <select name="export_state" class="form-select">
+                        <option th:selected="${session.record_export_state eq ''}" value="">查询全部</option>
+                        <option th:selected="${session.record_export_state eq '1'}" value="1">已导出</option>
+                        <option th:selected="${session.record_export_state eq '0'}" value="0">未导出</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 收码状态</label>
+                    <div class="col-sm-8">
+                      <select name="state" class="form-select">
+                        <option th:selected="${session.record_state eq '审核中'}" value="审核中">审核中</option>
+                        <option th:selected="${session.record_state eq '已通过'}" value="已通过">已通过</option>
+                        <option th:selected="${session.record_state eq '未通过'}" value="未通过">未通过</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                  <button type="reset" class="btn btn-default">重置</button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1" id="export" ><i class="mdi mdi-application-export"></i> 导出</a>
+            <a class="btn btn-primary me-1" id="import" ><i class="mdi mdi-application-export"></i> 导入</a>
+            <a class="btn btn-primary me-1" id="verify" ><i class="mdi mdi-file-chart-outline"></i> 核销</a>
+            <a class="btn btn-primary me-1" id="census" ><i class="mdi mdi-file-chart-outline"></i> 统计</a>
+            <a class="btn btn-success me-1" id="effective" ><i class="mdi mdi-data-matrix-plus"></i> 有效</a>
+            <a class="btn btn-danger me-1" id="invalid" ><i class="mdi mdi-data-matrix-remove"></i> 无效</a>
+            <a class="btn btn-primary" id="deleteAll"><i class="mdi mdi-window-close"></i> 删除</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>用户UID</th>
+                  <th>项目名称</th>
+                  <th>积分</th>
+                  <th>项目图片</th>
+                  <th>条形码</th>
+                  <th>二维码</th>
+                  <th>验证码</th>
+                  <th>卖出时间</th>
+                  <th>导出状态</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody th:if="${session.user.pattern.equals('operate')}">
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.id}">1</td>
+                  <td th:text="${item.uid}">1</td>
+                  <td th:text="${item.name}">1</td>
+                  <td th:text="${item.points}">1</td>
+                  <td width="100px">
+                    <img width="50px" th:src="${item.image}" class="rounded" th:alt="${item.name}">
+                  </td>
+                  <td th:text="${item.code}">第01章 天涯思君不可忘</td>
+                  <td th:text="${item.qrCode}">《倚天屠龙记》</td>
+                  <td th:text="${item.checkCode}">金庸</td>
+                  <td th:text="${#dates.format(item.updateTime,'yyyy-MM-dd HH:mm:ss')}">36</td>
+                  <td th:switch="${item.exportState}">
+                    <span th:case="1" class="text-info">已导出</span>
+                    <span th:case="0" class="text-dark">未导出</span>
+                  </td>
+                  <td th:text="${item.state}">36</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default scan_check" th:data-qr_code="${item.qrCode}" data-bs-toggle="tooltip" title="扫描二维码">
+                        <i class="mdi mdi-data-matrix-scan"></i>
+                      </a>
+                      <!-- 无效码按钮：红色背景+文字 -->
+                      <a class="m-2 btn btn-danger scan_save" data-state="未通过" th:data-oid="${item.oid}">
+                        无效码
+                      </a>
+                      <!-- 有效码按钮：绿色背景+文字 -->
+                      <a class="m-2 btn btn-success scan_save" data-state="已通过" th:data-oid="${item.oid}">
+                        有效码
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr th:if="${list.size()==0}">
+                  <td class="text-center" colspan="16">
+                      <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                        <img width="240px" src="images/empty.png">
+                        <span style="color: #8f8f8f">数据为空</span>
+                      </div>
+                  </td>
+                </tr>
+                <tr th:if="${session.user.pattern.equals('deposit')}">
+                  <td class="text-center" colspan="16">
+                    <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                      <img width="240px" src="images/lock.png">
+                      <span style="color: #8f8f8f">托管模式</span>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <ul th:if="${list.size()!=0}" class="pagination">
+            <li class="page-item" style="user-select: none;pointer-events: none;">
+              <a class="page-link">
+                <span aria-hidden="true" th:text="${'共'+iPage.total+'条'}"></span>
+              </a>
+            </li>
+            <li class="page-item" th:classappend="${iPage.current==1} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current-1)+'&size='+iPage.size+'&action=page'}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex=1'+'&size='+iPage.size+'&action=page'}">首页</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" th:text="${iPage.current+'/'+iPage.getPages()}">页码</a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex='+iPage.getPages()+'&size='+iPage.size+'&action=page'}">尾页</a></li>
+            <li class="page-item" th:classappend="${(iPage.current+1)>iPage.getPages()} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current+1)+'&size='+iPage.size+'&action=page'}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+            <li class="page-item" style="margin-right: 6px">
+              <select class="form-control selectpicker" id="pageSize">
+                <option th:selected="${iPage.size==10}" value="10" selected>10条/页</option>
+                <option th:selected="${iPage.size==20}" value="20">20条/页</option>
+                <option th:selected="${iPage.size==50}" value="50">50条/页</option>
+                <option th:selected="${iPage.size==100}" value="100">100条/页</option>
+                <option th:selected="${iPage.size==500}" value="500">500条/页</option>
+              </select>
+            </li>
+            <li class="page-item">
+              <form th:action="${view}" class="input-group">
+                <input type="hidden" name="size" th:value="${iPage.size}">
+                <input type="hidden" name="action" value="page">
+                <input type="text" style="width: auto" name="pageIndex" class="form-control" th:value="${iPage.current}">
+                <button class="btn btn-default" type="submit" id="button-addon2">跳转</button>
+              </form>
+            </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="js/barcode/JsBarcode.all.min.js"></script>
+<script type="text/javascript" src="js/momentjs/moment.min.js"></script>
+<script type="text/javascript" src="js/momentjs/locale/zh-cn.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+<script>
+
+  $('#pageSize').change(function(){
+    $("input[name='size']").val($(this).val());
+    $('#search_form').submit();
+  });
+
+  //回收统计
+  $('#census').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '回收统计',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/census?sale=1' //iframe的url
+    });
+  });
+
+  //扫描二维码
+  $(".scan_check").click(function () {
+
+    let qr_code = $(this).attr("data-qr_code")
+
+    layer.open({
+      type: 1,
+      title: false,
+      closeBtn: 1,
+      shadeClose: true,
+      content: '<div id="qrcode" style="width: auto;height: auto;margin: 0 auto;padding: 10px"></div>'
+    });
+
+    $("#qrcode").empty();
+
+    $('#qrcode').qrcode({
+      render: "canvas", //也可以替换为table
+      width: 240,
+      height: 240,
+      text: qr_code
+    });
+
+  });
+
+  // 有效码/无效码按钮点击事件（已更新提示逻辑）
+  $(".scan_save").click(function () {
+
+    let oid = $(this).attr("data-oid");
+    let state = $(this).attr("data-state");
+
+    // 根据按钮类型动态生成提示文本
+    let confirmText;
+    if (state === "已通过") {
+      // 有效码按钮：绿色文字
+      confirmText = '确定要把这个码设为<span class="text-success">有效</span>吗？';
+    } else {
+      // 无效码按钮：红色文字
+      confirmText = '确定要把这个码设为<span class="text-danger">无效</span>吗？';
+    }
+
+    layer.confirm(
+            confirmText,  // 带HTML样式的提示文本
+            {
+              btn: ['确认', '取消'],
+              html: true  // 允许解析HTML标签
+            },
+            function(){
+              $.ajax({
+                url: '/record/updateState',
+                type: 'post',
+                data: {
+                  oid: oid,
+                  state: state
+                },
+                dataType: 'html',
+                traditional: true,
+                success: function (res) {
+                  let data = JSON.parse(res);
+                  if(data.code == 0){
+                    location.reload();//刷新当前页面
+                  }else{
+                    layer.msg(data.msg)
+                  }
+                }
+              });
+            },
+            function(){
+              layer.msg('已取消操作');
+            }
+    );
+
+  });
+
+  //批量有效
+  $("#effective").click(function () {
+
+    var list = []
+
+    $("tbody input").each(function(){
+      if($(this).is(':checked')){
+        list.push($(this).val());
+      }
+    });
+
+    if(list.length==0){
+      return false;
+    }
+
+    layer.confirm('确认要修改选中的记录状态为有效？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/record/effective',
+        type: 'post',
+        data: {
+          idList:list
+        },
+        dataType: 'html',
+        traditional: true,
+        success: function (res) {
+          let data = JSON.parse(res);
+          if(data.code == 0){
+            location.reload();
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+  //批量无效
+  $("#invalid").click(function () {
+
+    var list = []
+
+    $("tbody input").each(function(){
+      if($(this).is(':checked')){
+        list.push($(this).val());
+      }
+    });
+
+    if(list.length==0){
+      return false;
+    }
+
+    layer.confirm('确认要修改选中的记录状态为无效？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/record/invalid',
+        type: 'post',
+        data: {
+          idList:list
+        },
+        dataType: 'html',
+        traditional: true,
+        success: function (res) {
+          let data = JSON.parse(res);
+          if(data.code == 0){
+            location.reload();
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+  //批量删除收码记录资料
+  $("#deleteAll").click(function () {
+
+    var list = [];
+
+    $("tbody input").each(function(){
+      if($(this).is(':checked')){
+        list.push($(this).val());
+      }
+    });
+
+    if(list.length==0){
+      return false;
+    }
+
+    layer.confirm('确认要删除选中的收码记录？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/record/del',
+        type: 'delete',
+        data: {
+          idList:list
+        },
+        dataType: 'html',
+        traditional: true,
+        success: function (res) {
+          let data = JSON.parse(res);
+          if(data.code == 0){
+            location.reload();
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+
+  $('#verify').click(function() {
+    layer.open({
+      type: 2,
+      title: '计划核销',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/record_verify' //iframe的url
+    });
+  });
+
+  $('#export').click(function() {
+    layer.open({
+      type: 2,
+      title: '导出向导',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/record_export' //iframe的url
+    });
+  });
+
+  $('#import').click(function() {
+    layer.open({
+      type: 2,
+      title: '导入向导',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/record_import' //iframe的url
+    });
+  });
+</script>
+<script type="text/javascript" th:inline="javascript">
+  $(document).ready(function(){
+    $('#reportrange').daterangepicker({
+      locale: {
+        format: 'YYYY-MM-DD',
+        cancelLabel:'清空',
+      },
+      alwaysShowCalendars:true,
+      ranges: {
+        '今天': [moment(), moment()],
+        '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '当前月': [moment().startOf('month'), moment().endOf('month')],
+        '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        '最近7日': [moment().subtract(6, 'days'), moment()],
+        '最近30月': [moment().subtract(29, 'days'), moment()],
+      }
+    });
+
+    if([[${session.record_time}]]==""){
+      $('#reportrange').val('');
+    }
+
+    $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });
+  });
+</script>
+</body>
+</html>

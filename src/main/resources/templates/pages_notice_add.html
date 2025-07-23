@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>新增文档 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">编辑公告</div></header>
+        <div class="card-body">
+          
+          <form id="category_form" action="/notice/add" method="post" class="row" onsubmit="return false;">
+
+            <input type="hidden" name="merchant" th:value="${notice.merchant}">
+
+            <div class="mb-3 col-md-12">
+              <label for="speed" class="form-label">滚动速度</label>
+              <input type="number" class="form-control" id="speed" name="speed" th:value="${notice.speed}" placeholder="请输入滚动速度" />
+            </div>
+
+            <div class="mb-3 col-md-12">
+              <label for="info" class="form-label">公告内容</label>
+              <textarea class="form-control" id="info" name="info" rows="5" th:text="${notice.info}" placeholder="公告内容"></textarea>
+            </div>
+            <div class="mb-3 col-md-12">
+              <button id="keepData" type="button" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--上传插件-->
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+      // let name = $("input[name='name']").val();
+      // let phone = $("input[name='phone']").val();
+      // let wechat = $("i6901028317122nput[name='wechat']").val();
+
+
+      $("#category_form").ajaxSubmit(function (result) {
+
+
+        // let res = JSON.parse(result);
+        //
+        if(result.code==0){
+           layer.msg("公告修改成功");
+        }else{
+
+          layer.msg("公告修改失败");
+
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

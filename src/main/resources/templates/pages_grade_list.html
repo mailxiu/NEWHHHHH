@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+  <meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+  <title>文档列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">级别列表</div></header>
+        <div class="card-body">
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1 update" data-id="0"><i class="mdi mdi-plus"></i> 新增</a>
+            <a class="btn btn-success me-1 stateAll" data-state="1"><i class="mdi mdi-check"></i> 启用</a>
+            <a class="btn btn-warning me-1 stateAll" data-state="0"><i class="mdi mdi-block-helper"></i> 禁用</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>等级名称</th>
+                  <th>等级</th>
+                  <th>增益</th>
+                  <th>有效期/日</th>
+                  <th>有效期/描述</th>
+                  <th>扫码数/日</th>
+                  <th>升级价格</th>
+                  <th>卖货提成</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.name}">1</td>
+                  <td th:text="${'Lv_'+item.sort}">1</td>
+                  <td th:text="${item.gain}">《倚天屠龙记》</td>
+                  <td th:text="${item.period}">《倚天屠龙记》</td>
+                  <td th:text="${item.periodRefer}">《倚天屠龙记》</td>
+                  <td th:text="${item.total}">《倚天屠龙记》</td>
+                  <td th:text="${item.price}">《倚天屠龙记》</td>
+                  <td th:text="${item.present}">第01章 天涯思君不可忘</td>
+                  <td>
+                    <font th:if="${item.state==1}" class="text-success">开启</font>
+                    <font th:if="${item.state==0}" class="text-danger">关闭</font>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default update" th:data-id="${item.id}" data-bs-toggle="tooltip" title="编辑"><i class="mdi mdi-pencil"></i></a>
+                      <a class="m-2 btn btn-default delete" th:data-id="${item.id}" data-bs-toggle="tooltip" title="删除"><i class="mdi mdi-delete"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot th:if="${list.size()==0}">
+              <tr>
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script>
+
+  $(".stateAll").click(function () {
+
+    let state = $(this).attr("data-state");
+
+    var list = []
+
+    $("tbody input").each(function(){
+      if($(this).is(':checked')){
+        list.push($(this).val());
+      }
+    });
+
+    layer.confirm('确认要修改选中级别状态？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/grade/updateState',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          idList:list,
+          state:state
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+
+
+
+  $('.update').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '修改级别',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/grade_update?id='+$(this).attr("data-id"), //iframe的url
+      end:function () {
+          location.reload();
+      }
+    });
+  });
+
+  //删除等级
+  $(".delete").click(function () {
+
+    let id = $(this).attr("data-id");
+
+    layer.confirm('确认要删除选中的等级？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/grade/del',
+        type: 'delete',
+        // 设置的是请求参数
+        data: {
+          id: id
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>提现列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link href="js/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="js/bootstrap-select/bootstrap-select.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">提现列表</div></header>
+        <div class="card-body">
+          <div class="card-search mb-2-5">
+            <form id="search_form" class="search-form" method="post" action="/exchange_list" role="form">
+              <input type="hidden" name="size" th:value="${iPage.size}">
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label">时间范围</label>
+                    <div class="col-sm-8">
+                      <input type="text" id="reportrange" name="time" th:value="${session.exchange_time}" placeholder="请选择时间范围" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 用户UID</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="uid" th:value="${session.exchange_uid}" placeholder="请输入用户UID" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 提现状态</label>
+                    <div class="col-sm-8">
+                      <select name="state" class="form-select">
+                        <option th:selected="${session.exchange_state eq '已处理'}" value="已处理">已处理</option>
+                        <option th:selected="${session.exchange_state eq '已驳回'}" value="已驳回">已驳回</option>
+                        <option th:selected="${session.exchange_state eq '待处理'}" value="待处理">待处理</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                  <button type="reset" class="btn btn-default">重置</button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1 stateAll" data-state="1"><i class="mdi mdi-check"></i> 批量处理</a>
+            <a class="btn btn-primary me-1" id="calculate"><i class="mdi mdi-block-helper"></i> 对账统计</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>用户UID</th>
+                  <th>提现积分</th>
+                  <th>手续费</th>
+                  <th>实际到账</th>
+                  <th>提现后余额</th>
+                  <th>提现渠道</th>
+                  <th>状态</th>
+                  <th>提现时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.id}">1</td>
+                  <td th:text="${item.uid}">第01章 天涯思君不可忘</td>
+                  <td th:text="${item.points}">《倚天屠龙记》</td>
+                  <td th:text="${item.chargeMoney}">《倚天屠龙记》</td>
+                  <td>
+                    <span class="text-danger" th:text="${item.realMoney}"></span>
+                  </td>
+                  <td th:text="${item.balance}"></td>
+                  <td th:text="${item.channel.getDesc()}"></td>
+                  <td>
+                    <span class="text-success" th:if="${item.state eq '已处理'}">已处理</span>
+                    <span class="text-danger" th:if="${item.state eq '已驳回'}">已驳回</span>
+                    <span class="text-warning" th:if="${item.state eq '待处理'}">待处理</span>
+                  </td>
+                  <td th:text="${item.createTime}">《倚天屠龙记》</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default scan_pay" th:data-qr_code="${item.paymentCode}" data-bs-toggle="tooltip" title="查看"><i class="mdi mdi-qrcode-scan"></i></a>
+                      <a class="m-2 btn btn-default details" th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="详情"><i class="mdi mdi-calendar-text-outline"></i></a>
+                      <a class="m-2 btn btn-default pass" th:data-oid="${item.oid}" data-bs-toggle="tooltip" title="通过"><i class="mdi mdi-check"></i></a>
+                      <a class="m-2 btn btn-default rebut" th:data-oid="${item.oid}" data-bs-toggle="tooltip" title="驳回"><i class="mdi mdi-window-close"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot th:if="${list.size()==0}">
+              <tr>
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+          <ul th:if="${list.size()!=0}" class="pagination">
+            <li class="page-item" style="user-select: none;pointer-events: none;">
+              <a class="page-link">
+                <span aria-hidden="true" th:text="${'共'+iPage.total+'条'}"></span>
+              </a>
+            </li>
+            <li class="page-item" th:classappend="${iPage.current==1} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current-1)+'&size='+iPage.size+'&action=page'}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex=1'+'&size='+iPage.size+'&action=page'}">首页</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" th:text="${iPage.current+'/'+iPage.getPages()}">页码</a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex='+iPage.getPages()+'&size='+iPage.size+'&action=page'}">尾页</a></li>
+            <li class="page-item" th:classappend="${(iPage.current+1)>iPage.getPages()} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current+1)+'&size='+iPage.size+'&action=page'}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+            <li class="page-item" style="margin-right: 6px">
+              <select class="form-control selectpicker" name="example-1" id="pageSize">
+                <option th:selected="${iPage.size==10}" value="10" selected>10条/页</option>
+                <option th:selected="${iPage.size==20}" value="20">20条/页</option>
+                <option th:selected="${iPage.size==30}" value="30">30条/页</option>
+                <option th:selected="${iPage.size==50}" value="50">50条/页</option>
+              </select>
+            </li>
+            <li class="page-item">
+              <form th:action="${view}" class="input-group">
+                <input type="hidden" name="size" th:value="${iPage.size}">
+                <input type="hidden" name="action" value="page">
+                <input type="text" style="width: auto" name="pageIndex" class="form-control" th:value="${iPage.current}">
+                <button class="btn btn-default" type="submit" id="button-addon2">跳转</button>
+              </form>
+            </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/momentjs/moment.min.js"></script>
+<script type="text/javascript" src="js/momentjs/locale/zh-cn.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+<script>
+
+  $('#pageSize').change(function(){
+    $("input[name='size']").val($(this).val());
+    $('#search_form').submit();
+  });
+
+  //扫描收款码
+  $(".scan_pay").click(function () {
+
+    let qr_code = $(this).attr("data-qr_code")
+
+    layer.open({
+      type: 1,
+      title: false,
+      closeBtn: 0,
+      shadeClose: true,
+      // skin: 'bg-success',
+      content: '<img width="300px" src="'+qr_code+'">'
+    });
+
+  });
+
+
+  $('.details').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '提现详情',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/withdrawal_details?uid='+$(this).attr("data-uid"), //iframe的url
+      end:function () {
+        location.reload();
+      }
+    });
+
+  });
+
+  //核算统计
+  $('#calculate').click(function() {
+
+    var index = layer.load(0, { shade:  [0.1, '#000'] });  // 0.1透明度的白色背景
+
+    $.ajax({
+      url: '/withdrawal/calculate',
+      type: 'get',
+      // 设置的是请求参数
+      data: {},
+      dataType: 'html',
+      traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+      success: function (res) {
+
+        let data = JSON.parse(res);
+
+        layer.close(index);
+
+        if(data.code ==0){
+          layer.alert(data.data);
+        }else{
+          layer.msg(data.msg)
+        }
+      }
+    });
+
+  });
+
+  //驳回提现
+  $('.rebut').click(function() {
+
+    var oid = $(this).attr("data-oid");
+
+    layer.prompt({title: '输入要驳回原因，并确认', formType: 4}, function(info, index){
+
+      $.ajax({
+        url: '/withdrawal/rebut',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          oid:oid,
+          info:info
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          layer.close(index);
+
+          if(data.code ==0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    });
+  });
+
+  //通过提现
+  $(".pass").click(function () {
+
+    var oid = $(this).attr("data-oid");
+
+    layer.confirm('确认要保存选中提现状态？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/withdrawal/pass',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          oid:oid,
+        },
+        dataType: 'html',
+        traditional: true,
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code ==0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+  //批量确认处理
+  $(".stateAll").click(function () {
+
+    let state = $(this).attr("data-state");
+
+    var list = []
+
+    $("tbody input").each(function(){
+      if($(this).is(':checked')){
+        list.push($(this).val());
+      }
+    });
+
+    layer.confirm('确认要保存选中提现状态？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/withdrawal/state_all',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          idList:list,
+          state:state
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+</script>
+<script type="text/javascript" th:inline="javascript">
+  $(document).ready(function(){
+
+    // 预定义的日期范围
+    // var start = moment().subtract(29, 'days');
+    // var end = moment();
+
+    // function cb(start, end) {
+    //   $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    // }
+
+    $('#reportrange').daterangepicker({
+      locale: {
+        format: 'YYYY-MM-DD',
+        cancelLabel:'清空',
+      },
+      alwaysShowCalendars:true,
+      ranges: {
+        '今天': [moment(), moment()],
+        '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '当前月': [moment().startOf('month'), moment().endOf('month')],
+        '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        '最近7日': [moment().subtract(6, 'days'), moment()],
+        '最近30月': [moment().subtract(29, 'days'), moment()],
+      }
+    });
+
+    if([[${session.exchange_time}]]==""){
+      $('#reportrange').val('');
+    }
+
+    $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });
+
+  });
+</script>
+</body>
+</html>

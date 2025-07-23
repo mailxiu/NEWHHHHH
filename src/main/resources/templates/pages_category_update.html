@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>新增文档 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">添加类别</div></header>
+        <div class="card-body">
+          
+          <form id="category_form" action="/category/update" method="post" class="row" onsubmit="return false;">
+            <input type="hidden" class="form-control" name="id" th:value="${category.id}" />
+            <div class="mb-3 col-md-12">
+              <label for="name" class="form-label">类别名称</label>
+              <input type="text" class="form-control" id="name" name="name" th:value="${category.name}" placeholder="请输入项目名称" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="sort" class="form-label">排序</label>
+              <input type="number" class="form-control" id="sort" name="sort" th:value="${category.sort}" placeholder="排序号数值越大越靠前" />
+            </div>
+            <div class="mb-3 file-group col-md-12">
+              <label for="picture" class="form-label">类别图片</label>
+              <div class="input-group" id="picture">
+                <input type="text" class="form-control file-value" name="image" th:value="${category.image}" placeholder="请输入或选择项目图片" />
+                <input type="file" name="" accaccept=".png,.jpg,.jpeg,.bmp,.gif" class="d-none" />
+                <div class="input-group-append">
+                  <button class="btn btn-default file-browser" type="button">上传图片</button>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="seo_description" class="form-label">项目描述</label>
+              <textarea class="form-control" id="seo_description" name="remarks" rows="5" value="" placeholder="描述"></textarea>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label class="form-label">是否显示</label>
+              <div class="clearfix">
+                <div class="form-check form-check-inline">
+      	          <input type="radio" value="1" id="statusOne" name="state" th:checked="${category.state==1}" class="form-check-input">
+      	          <label class="form-check-label" for="statusOne">开启</label>
+      	        </div>
+      	        <div class="form-check form-check-inline">
+      	          <input type="radio" value="0" id="statusTwo" name="state" th:checked="${category.state==0}" class="form-check-input">
+      	          <label class="form-check-label" for="statusTwo">关闭</label>
+      	        </div>
+              </div>
+            </div>
+            <div class="mb-3 col-md-12">
+              <button id="keepData" type="button" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(document).on('click', '.file-browser', function() {//点击上传图片
+
+      console.log('点击上传图片');
+
+      var $browser = $(this);
+      var file = $browser.closest('.file-group').find('[type="file"]');
+      file.on( 'click', function(e) {
+        e.stopPropagation();
+      });
+      file.trigger('click');
+    });
+
+    $(document).on('change', '.file-group [type="file"]', function() {
+      console.log('文件内容发生改变');
+      var $this    = $(this);
+      var $input   = $(this)[0];
+      var $len     = $input.files.length;
+      var formFile = new FormData();
+
+      if ($len == 0) {
+        return false;
+      } else {
+        var fileAccaccept = $this.attr('accaccept');
+        var fileType      = $input.files[0].type;
+        var type          = (fileType.substr(fileType.lastIndexOf("/") + 1)).toLowerCase();
+
+        if (!type || fileAccaccept.indexOf(type) == -1) {
+          showNotify('您上传图片的类型不符合(.jpg|.jpeg|.gif|.png|.bmp)', 'danger', 1000);
+          return false;
+        }
+        formFile.append("uploadFile", $input.files[0]);
+      }
+
+      var data = formFile;
+      var l = $('body').lyearloading({
+        opacity: 0.2,
+        spinnerSize: 'nm'
+      });
+
+      $.ajax({
+        url: '/upload_project',
+        data: data,
+        type: "POST",
+        dataType: "json",
+        //上传文件无需缓存
+        cache: false,
+        //用于对data参数进行序列化处理 这里必须false
+        processData: false,
+        //必须
+        contentType: false,
+        success: function (res) {
+          l.destroy();
+          if (res.code === 20000) {
+            $this.closest('.file-group').find('.file-value').val(res.msg);
+          } else {
+            showNotify(res.msg, 'danger', 3000);
+          }
+        },
+      });
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+
+      $("#category_form").ajaxSubmit(function (result) {
+
+        if(result.code==0){
+           layer.msg("修改成功");
+        }else{
+          layer.msg("修改失败");
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

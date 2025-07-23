@@ -1,0 +1,53 @@
+/*    */ package com.bss.sdk.init;
+/*    */ 
+/*    */ import com.huifu.bspay.sdk.opps.core.BasePay;
+/*    */ import com.huifu.bspay.sdk.opps.core.config.MerConfig;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ public class OppsMerchantConfigDemo
+/*    */ {
+/*    */   public static MerConfig getMerchantConfig() {
+/* 27 */     BasePay.debug = true;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */     
+/* 34 */     BasePay.prodMode = "prod";
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */     
+/* 39 */     MerConfig merConfig = new MerConfig();
+/* 40 */     merConfig.setProcutId("EDUSTD");
+/* 41 */     merConfig.setSysId("6666000166606037");
+/* 42 */     merConfig.setRsaPrivateKey("MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCbmkGwbVvKyEEmsNkZrI2H23qlSY1oPMhph4P24xFchlgOLnK8hvKcLM10snF3w/u371UNra58u39E9ocU6lNiGkRzfn0FvG3Pf0xIM6Xzu39SJP2kohbRHnfO5vda5gg1RHX36eH63JvBV3X9FfbAoKVC5h3aZavHFldDgGD6dnIwFUOhLP8emt5Kxti+x96U8vQcjyHko23ACxZm2tqIzcwtxNdFG4nhqCq0Pxwf3FFuOBCCrWALi0lIWp6mzHjSPiKvHFrlvc/nFuskGo7e3A5vKeXeHUw7pi0AyCIuu+ZCJCOE1kBknh0mifGxaPHq9krNSuPUz+a3f0kIWEpXAgMBAAECggEAKYMBu1uxfWvnVbcgdCUArRn0olv5CbINlXm9zwPNAe4lV8M0gO9PkjKxrUxd0SHL6cpD2p5XSpeK4I8UgpPxIt73HAjGud0HPrArXafJwjhnQzbzJBTKGYgTVnNv0iREVFGrVzRiQVbRhscahyZw6frxm+NgW398UGS5axy4wpijgDyFarSJVafdV888fTPfUVo9L2IX5xQ866FxN5PNxJL84PzFFozWYNfHLcs54jJ8/zuqwtK+t0IbB/l3oHcnuK0Sfy8oWLg25FPZxlmDh9XG5eyEkzM3AeHATwj7BPAtA/G1LAF+cnxutGMv1LzxvJB4YEkWYV0zErOCWlGCIQKBgQDjW67SGbsMUAiEaYEs/LbapPs2C3eSe7W2VcOAEnmXW+/j2nbjlT8az3XyHaAca7xnQMreQsP2Utfe9JCFf2qngISBTfMjrb6YUPgIaww/pUKKov5+zQl1jR1isuvpkUGXeWu2fEfbGUT7Lf6gSB0wIkXBigaRHnhgnOgBEkFujQKBgQCvNHN62ko9J+27SHXPL2hGGeEoG/8H3eLwo0pE2MlvVHKXCJs7JlDLaG9dlIk3YXrh5OjrwY8ULuDylY3He2Lef91tbRWpMYvYHOdVIdgbUGwGs3ZkM3W7UIWYc48dpVZvhY/ScqRhmtdUNcdJzHCeVAx5Uj0jh35oD13egy5lcwKBgQDH2QRPbAyt4v/JnI/Ogokcod6rf+LoINP2ZWbGgfbdZBP2vka4/6yLnYa4fvAJa24deKeaPSfRsrpMIb+TiQ+wEtjmbCVn3EZnzuxnQelvXI2kHWgE/6fr61HEOzABjAwS4MkcjBwBbDHldGWYcCsv70BPwkrJbvYzPlj08B4R1QKBgCRqrI4ejUvE3t8MoqAb5HqdqnUhzJKgBimqZyeEP+pKDT9jZJCY2DZPUMaMtzCxrE8Du341Tz4MuGjzuPJ7rQM+ZJH4GIaAa+bRqyvAyyBySOHjr3oIUDJM/FfBvT+WPC8V/dzqQ0yeWJ+CRhgKzGW8ZpNZCqg144pRl1tGvQANAoGBAI9aVVexbHCrfdyIcdBLcI6xIly+geDyws8l/a4N6PXmVs4q+gYTyMOSrYA+DBSadCna+26+h8vGubl68Rtj0YkZ4+Yn+WpMHORI5z+Q2EBzS/03Gz9ByFEa4gE9ggraURMqhdeddcXVvgcPlAOl+UMTqOvPyp1sIwHugzPU4Aiw");
+/* 43 */     merConfig.setRsaPublicKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkJAKwd9m7ZeTJAUnRb44I3LcmBzspqtXqCULL+7LoQirD1+X1nK+i7UoOadZ0ev64B/60clkftU8PU1tnCyPCABUlLl6QGCRDl+dvVPPiCHtJE37DbQQbUh6acrW+lo3HlM0SNHVH05grrun5EuWLYFusS+UjNDA0gbjaygdK3ONxrfvo4qrB6mSAoxLkqya/rU/7TYqa5o7BlhkTmtbcl8shzgY0sqtBMmVeE0cSSmaWN8crTR5F36sIBcQ50RPpRT4KEWyP/MMM65UhHTT80U7pnxZKQD1+s5rmHIwc9px/l2mMGQkrvWvrCNobfFJ5o1Z0r4NqQa8SG/jSTAKDQIDAQAB");
+/* 44 */     merConfig.setHuifuId("6666000166606037");
+/* 45 */     return merConfig;
+/*    */   }
+/*    */ }
+
+
+/* Location:              C:\Users\yang\Documents\xwechat_files\wxid_3fhkjy8fz0wc11_2b47\msg\file\2025-07\recovery_applet-1.0.3-SNAPSHOT.jar!\BOOT-INF\classes\com\bss\sdk\init\OppsMerchantConfigDemo.class
+ * Java compiler version: 8 (52.0)
+ * JD-Core Version:       1.1.3
+ */

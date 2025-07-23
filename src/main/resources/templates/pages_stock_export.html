@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>导出向导 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          
+          <form id="export_form" action="/stock/export" method="post" class="row">
+
+            <div class="mb-3 file-group col-md-12">
+              <label for="exampleDataList" class="form-label">项目条形码</label>
+              <input class="form-control" list="datalistOptions" id="exampleDataList" name="bar_code" placeholder="输入搜索...">
+              <datalist id="datalistOptions">
+                <option th:each="item,customerStat : ${list}" th:value="${item.code}" th:text="${'名称：'+item.name+'  库存:'+item.num}">
+              </datalist>
+            </div>
+
+            <div class="mb-3 col-md-12">
+              <label for="total" class="form-label">导出数量</label>
+              <input type="text" class="form-control" id="total" name="total"  placeholder="请输入要导出的数量" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label class="form-label">导出格式</label>
+              <div class="clearfix">
+                <div class="form-check form-check-inline">
+      	          <input checked type="radio" value="1" id="statusOne" name="checking"  class="form-check-input">
+      	          <label class="form-check-label" for="statusOne">TXT文件</label>
+      	        </div>
+      	        <div class="form-check form-check-inline">
+      	          <input type="radio" value="0" id="statusTwo" name="checking" class="form-check-input" >
+      	          <label class="form-check-label" for="statusTwo">EXCEL文件</label>
+      	        </div>
+              </div>
+            </div>
+
+            <div class="mb-3 col-md-12">
+              <button id="export_btn" type="submit" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--上传插件-->
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+  // $(function () {
+  //   $("#export_btn").click(function () {
+  //
+  //     $("#export_form").ajaxSubmit(function (result) {
+  //
+  //       // let res = JSON.parse(result);
+  //
+  //       if(result.code==0){
+  //
+  //          layer.msg("数据修改成功");
+  //
+  //       }else{
+  //
+  //         layer.msg("数据修改失败");
+  //
+  //       }
+  //     });
+  //   });
+  // });
+</script>
+</body>
+</html>

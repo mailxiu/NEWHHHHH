@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<title>支付成功</title>
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="/css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+</head>
+  
+<body>
+
+    <div style="width: 100%;height: auto;display: flex;flex-direction: column;justify-content: center;align-items: center;position: absolute;top: 35%;left: 50%;transform: translate(-50%,-50%);">
+
+        <img th:if="${resp_code eq '00000000'}" style="width: 20%;" src="/images/paySuc.png">
+
+        <img th:if="${resp_code ne '00000000'}" style="width: 20%;" src="/images/payFai.png">
+
+        <h5 th:text="${resp_desc}" style="margin-top: 30px">支付成功</h5>
+
+        <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 30px">
+            <button class="btn btn-primary" onclick="sendMessageToMiniProgram()" type="button">返回程序</button>
+        </div>
+
+    </div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script type="text/javascript" src="/js/layer/layer.js"></script>
+<script>
+    function sendMessageToMiniProgram() {
+        // 确保页面运行在微信环境中
+        if (window.wx && window.wx.miniProgram) {
+            wx.miniProgram.postMessage({
+                data: {
+                    message: 'Hello from H5',
+                    timestamp: new Date().toISOString()
+                }
+            });
+
+            setTimeout(() => {
+                wx.miniProgram.switchTab({ url: '/pages/user/index' }); // 返回我的页面
+                // wx.miniProgram.navigateBack();//返回上一页
+                // wx.miniProgram.navigateTo({ url: '/pages/user/account' });//跳转非tab页面
+            }, 1000); // 延迟 2 秒
+
+        } else {
+            console.error('当前环境不支持 wx.miniProgram');
+        }
+    }
+
+</script>
+
+
+</body>
+</html>

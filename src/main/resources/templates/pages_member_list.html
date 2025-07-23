@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>会员列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link href="js/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="js/bootstrap-select/bootstrap-select.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">会员列表</div></header>
+        <div class="card-body">
+          <div class="card-search mb-2-5">
+            <form id="search_form" class="search-form" method="post" action="/member_list" role="form">
+              <input type="hidden" name="size" th:value="${iPage.size}">
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label">时间范围</label>
+                    <div class="col-sm-8">
+                      <input type="text" id="reportrange" name="time" th:value="${session.member_time}" placeholder="请选择时间范围" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 会员ID</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="uid" th:value="${session.member_uid}" placeholder="请输入会员ID" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 上级ID</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="mid" th:value="${session.member_mid}" placeholder="请输入上级ID" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 手机号</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="phone" th:value="${session.member_phone}" placeholder="请输入会员手机号" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 会员等级</label>
+                    <div class="col-sm-8">
+                      <select name="partner" class="form-select">
+                        <option value="">全部等级</option>
+                        <option  th:each="item,index : ${gradeList}" th:value="${item.sort}"  th:text="${item.name}" th:selected="${item.sort} eq ${session.member_partner}">小说</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                  <button type="reset" class="btn btn-default">重置</button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-success me-1" href="#!"><i class="mdi mdi-check"></i> 启用</a>
+            <a class="btn btn-warning me-1" href="#!"><i class="mdi mdi-block-helper"></i> 禁用</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>名称</th>
+                  <th>头像</th>
+                  <th>openid</th>
+                  <th>绑定手机</th>
+                  <th>积分</th>
+                  <th>会员等级</th>
+                  <th>状态</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.uid}">用户UID</td>
+                  <td th:text="${item.name}">用户名称</td>
+                  <td>
+                    <img width="30px" th:src="${item.portrait}" class="rounded" th:alt="${item.name}">
+                  </td>
+                  <td th:text="${item.openid}">微信标识</td>
+                  <td th:text="${item.phone}">绑定手机</td>
+                  <td th:text="${item.points}">用户积分</td>
+                  <td th:text="${'Lv_'+item.partner}"></td>
+                  <td th:text="${item.state}">状态</td>
+                  <td th:text="${#dates.format(item.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default update" th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="修改信息"><i class="mdi mdi-account-edit"></i></a>
+                      <a class="m-2 btn btn-default upgrade" th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="常规升级"><i class="mdi mdi-pencil"></i></a>
+                      <a class="m-2 btn btn-default task" th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="任务升级"><i class="mdi mdi-clock-edit"></i></a>
+                      <a class="m-2 btn btn-default freeze"  th:data-uid="${item.uid}" data-state="已冻结" data-bs-toggle="tooltip" title="冻结账户"><i class="mdi mdi-account-cancel"></i></a>
+                      <a class="m-2 btn btn-default freeze"  th:data-uid="${item.uid}" data-state="已激活" data-bs-toggle="tooltip" title="解除冻结"><i class="mdi mdi-account-check"></i></a>
+                      <a class="m-2 btn btn-default analysis"  th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="会员分析"><i class="mdi mdi-eye-refresh"></i></a>
+                      <a class="m-2 btn btn-default spread"  th:data-uid="${item.uid}" data-bs-toggle="tooltip" title="推广分析"><i class="mdi mdi-account-group"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              <tfoot th:if="${list.size()==0}">
+                <tr>
+                  <td class="text-center" colspan="16">
+                    <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                      <img width="240px" src="images/empty.png">
+                      <span style="color: #8f8f8f">数据为空</span>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+              </tbody>
+            </table>
+          </div>
+
+          <ul th:if="${list.size()!=0}" class="pagination">
+            <li class="page-item" style="user-select: none;pointer-events: none;">
+              <a class="page-link">
+                <span aria-hidden="true" th:text="${'共'+iPage.total+'条'}"></span>
+              </a>
+            </li>
+            <li class="page-item" th:classappend="${iPage.current==1} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current-1+'&size='+iPage.size+'&action=page')}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex=1'+'&size='+iPage.size+'&action=page'}">首页</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" th:text="${iPage.current+'/'+iPage.getPages()}">页码</a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex='+iPage.getPages()+'&size='+iPage.size+'&action=page'}">尾页</a></li>
+            <li class="page-item" th:classappend="${(iPage.current+1)>iPage.getPages()} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current+1)+'&size='+iPage.size+'&action=page'}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+            <li class="page-item" style="margin-right: 6px">
+              <select class="form-control selectpicker" name="example-1" id="pageSize">
+                <option th:selected="${iPage.size==10}" value="10" selected>10条/页</option>
+                <option th:selected="${iPage.size==20}" value="20">20条/页</option>
+                <option th:selected="${iPage.size==30}" value="30">30条/页</option>
+                <option th:selected="${iPage.size==50}" value="50">50条/页</option>
+              </select>
+            </li>
+            <li class="page-item">
+              <form th:action="${view}" class="input-group">
+                <input type="hidden" name="size" th:value="${iPage.size}">
+                <input type="hidden" name="action" value="page">
+                <input type="text" style="width: auto" name="pageIndex" class="form-control" th:value="${iPage.current}">
+                <button class="btn btn-default" type="submit" id="button-addon2">跳转</button>
+              </form>
+            </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/momentjs/moment.min.js"></script>
+<script type="text/javascript" src="js/momentjs/locale/zh-cn.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+<script>
+
+  $('#pageSize').change(function(){
+    $("input[name='size']").val($(this).val());
+    $('#search_form').submit();
+  });
+
+  //修改会员等级
+  $('.upgrade').click(function() {
+
+    var uid = $(this).attr("data-uid");
+
+    layer.prompt({title: '输入要修改的等级，并确认', formType: 4}, function(partner, index){
+
+      //开始执行修改会员等级
+      $.ajax({
+        url: '/member/update_partner',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          uid:uid,
+          partner:partner
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          layer.close(index);
+
+          if(data.code ==0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    });
+  });
+
+  //任务修改会员等级
+  $('.task').click(function() {
+
+    var uid = $(this).attr("data-uid");
+
+    layer.prompt({title: '输入要修改的等级，并确认', formType: 4}, function(partner, index){
+
+      layer.close(index);
+
+      layer.prompt({title: '输入分佣金额，并确认', formType: 4}, function(bonus, index2){
+
+        //开始执行修改会员等级
+        $.ajax({
+          url: '/member/task_partner',
+          type: 'post',
+          // 设置的是请求参数
+          data: {
+            uid:uid,
+            partner:partner,
+            bonus:bonus
+          },
+          dataType: 'html',
+          traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+          success: function (res) {
+
+            let data = JSON.parse(res);
+
+            layer.close(index2);
+
+            if(data.code ==0){
+              location.reload();//刷新当前页面
+            }else{
+              layer.msg(data.msg)
+            }
+          }
+        });
+      });
+
+    });
+  });
+
+  //修改会员状态
+  $(".freeze").click(function () {
+
+    let uid = $(this).attr("data-uid");
+
+    let state = $(this).attr("data-state");
+
+    layer.confirm('确定要修改此用户状态？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/member/update_freeze',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          uid:uid,
+          state:state
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+
+  //编辑会员资料
+  $('.update').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '修改资料',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/member_update?uid='+$(this).attr("data-uid"), //iframe的url
+    });
+
+  });
+
+
+  //会员分析
+  $('.analysis').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '会员分析',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/member_details?uid='+$(this).attr("data-uid"), //iframe的url
+    });
+
+  });
+
+
+
+  $('.spread').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '推广分析',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/member_spread?uid='+$(this).attr("data-uid"), //iframe的url
+    });
+
+
+  });
+
+</script>
+<script type="text/javascript" th:inline="javascript">
+  $(document).ready(function(){
+
+    $('#reportrange').daterangepicker({
+      locale: {
+        format: 'YYYY-MM-DD',
+        cancelLabel:'清空',
+      },
+      alwaysShowCalendars:true,
+      ranges: {
+        '今天': [moment(), moment()],
+        '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '当前月': [moment().startOf('month'), moment().endOf('month')],
+        '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+        '最近7日': [moment().subtract(6, 'days'), moment()],
+        '最近30月': [moment().subtract(29, 'days'), moment()],
+      }
+    });
+
+    if([[${session.member_time}]]==""){
+      $('#reportrange').val('');
+    }
+
+    $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });
+
+  });
+</script>
+</body>
+</html>

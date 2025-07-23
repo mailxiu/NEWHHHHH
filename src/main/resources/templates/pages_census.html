@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>新增文档 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>项目图片</th>
+                  <th>名称</th>
+                  <th>条码</th>
+                  <th>数量</th>
+                  <th th:text="${sale eq 1?'卖出时间':'扫入时间'}">卖出时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item,customerStat : ${array}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td width="100px">
+                    <img width="50px" th:src="${item.image}" class="rounded">
+                  </td>
+                  <td th:text="${item.name}">1</td>
+                  <td th:text="${item.code}">1</td>
+                  <td th:text="${item.num}">1</td>
+                  <td th:text="${sale eq 1}?${#dates.format(item.earliestUpdateTime,'yyyy-MM-dd HH:mm:ss')}:${item.createTime}">扫入时间</td>
+                </tr>
+                </tbody>
+                <tfoot th:if="${array.size()==0}">
+                <tr>
+                  <td class="text-center" colspan="16">
+                    <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                      <img width="240px" src="images/empty.png">
+                      <span style="color: #8f8f8f">数据为空</span>
+                    </div>
+                  </td>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--上传插件-->
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+      // let name = $("input[name='name']").val();
+      // let phone = $("input[name='phone']").val();
+      // let wechat = $("i6901028317122nput[name='wechat']").val();
+
+
+      $("#category_form").ajaxSubmit(function (result) {
+
+
+        // let res = JSON.parse(result);
+        //
+        if(result.code==0){
+           layer.msg("公告修改成功");
+        }else{
+
+          layer.msg("公告修改失败");
+
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>会员分析 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">会员信息</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'会员昵称：'+member.name}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'账户余额：'+member.points+'元'}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'上级编号：'+(member.mid=='100001'?'未绑定上级':member.mid)}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'推广下级：'+spread_num+'人'}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'绑定手机：'+member.phone}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'会员等级：'+grade.name }">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'注册来源：'+member.scene.getDesc()}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'注册时间：'+#dates.format(member.createTime,'yyyy-MM-dd HH:mm:ss')}">收件人：苏女士</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">积分统计</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'结算-回收结算：'+recovery_sum}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'结算-升级分佣：'+upgrade_sum}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'结算-卖货提成：'+present_sum}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'结算-全项统计：'+whole_sum}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'提现-已通过：'+finished_sum}">收件人：苏女士</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'提现-待处理：'+pending_sum}">收件人：苏女士</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">录入统计</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'录入总数：'+all_num}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'审核中：'+examine_num}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'已通过：'+adopt_num}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'未通过：'+failed_num}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'录入品类：'+project_num}">收件人：苏女士</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'有效占比：'+credit}">收件人：苏女士</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">录入品类<span style="margin-left: 5px;font-size: 14px" class="text-primary" th:text="${'(通过积分：'+record_sum+' 仅供参考)'}"></span></div></header>
+        <div class="card-body">
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>项目名称</th>
+                <th>项目图片</th>
+                <th>条形码</th>
+                <th>录入总数</th>
+                <th>有效录入</th>
+                <th>无效录入</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="item,customerStat : ${list}">
+                <td th:text="${customerStat.count}">1</td>
+                <td th:text="${item.name}">1</td>
+                <td width="100px">
+                  <img width="50px" th:src="${item.image}" class="rounded" th:alt="${item.name}">
+                </td>
+                <td th:text="${item.code}">1</td>
+                <td th:text="${item.countAll}">1</td>
+                <td th:text="${item.countTrue}">1</td>
+                <td th:text="${item.countFalse}">1</td>
+              </tr>
+              </tbody>
+              <tfoot th:if="${list.size()==0}">
+              <tr>
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(document).on('click', '.file-browser', function() {//点击上传图片
+
+      console.log('点击上传图片');
+
+      var $browser = $(this);
+      var file = $browser.closest('.file-group').find('[type="file"]');
+      file.on( 'click', function(e) {
+        e.stopPropagation();
+      });
+      file.trigger('click');
+    });
+
+    $(document).on('change', '.file-group [type="file"]', function() {
+      console.log('文件内容发生改变');
+      var $this    = $(this);
+      var $input   = $(this)[0];
+      var $len     = $input.files.length;
+      var formFile = new FormData();
+
+      if ($len == 0) {
+        return false;
+      } else {
+        var fileAccaccept = $this.attr('accaccept');
+        var fileType      = $input.files[0].type;
+        var type          = (fileType.substr(fileType.lastIndexOf("/") + 1)).toLowerCase();
+
+        if (!type || fileAccaccept.indexOf(type) == -1) {
+          showNotify('您上传图片的类型不符合(.jpg|.jpeg|.gif|.png|.bmp)', 'danger', 1000);
+          return false;
+        }
+        formFile.append("uploadFile", $input.files[0]);
+      }
+
+      var data = formFile;
+      var l = $('body').lyearloading({
+        opacity: 0.2,
+        spinnerSize: 'nm'
+      });
+
+      $.ajax({
+        url: 'https://jielong.openk.cn/upload',
+        data: data,
+        type: "POST",
+        dataType: "json",
+        //上传文件无需缓存
+        cache: false,
+        //用于对data参数进行序列化处理 这里必须false
+        processData: false,
+        //必须
+        contentType: false,
+        success: function (res) {
+          l.destroy();
+          if (res.code === 20000) {
+            $this.closest('.file-group').find('.file-value').val(res.msg);
+          } else {
+            showNotify(res.msg, 'danger', 3000);
+          }
+        },
+      });
+    });
+  });
+</script>
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+      // let name = $("input[name='name']").val();
+      // let phone = $("input[name='phone']").val();
+      // let wechat = $("i6901028317122nput[name='wechat']").val();
+
+
+      $("#project_form").ajaxSubmit(function (result) {
+
+
+        // let res = JSON.parse(result);
+        //
+        if(result.code==0){
+           layer.msg("数据修改成功");
+        }else{
+
+          layer.msg("数据修改失败");
+
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

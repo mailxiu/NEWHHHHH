@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title th:text="${markdown.name}">标题</title>
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="/css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/js/editor.md/css/editormd.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.min.css">
+<style>
+	.btn{
+		width: auto;
+		position: fixed;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 100px;
+		background-color: #DD524D;
+		text-align: center;
+		border-radius: 45px;
+	}
+</style>
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  <div class="row">
+
+  	<div class="col-lg-12">
+		<div id="test-editor" class="blog blog-detail">
+			<textarea th:text="${markdown.md}" name="md"  style="display:none;"></textarea>
+		</div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" src="/js/editor.md/lib/marked.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/prettify.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/raphael.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/underscore.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/sequence-diagram.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/flowchart.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/lib/jquery.flowchart.min.js"></script>
+<script type="text/javascript" src="/js/editor.md/editormd.js"></script>
+<script type="text/javascript" src="/js/layer/layer.js"></script>
+<script type="text/javascript">
+	$(function() {
+		testEditormdView = editormd.markdownToHTML("test-editor", {
+			markdown        : $("#md").val() ,//+ "\r\n" + $("#append-test").text(),
+			// htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+			htmlDecode      : "style,script,iframe",  // you can filter tags decode
+			//toc             : false,
+			tocm            : true,    // Using [TOCM]
+			//tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+			//gfm             : false,
+			//tocDropdown     : true,
+			markdownSourceCode : false, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+			emoji           : true,
+			taskList        : true,
+			tex             : true,  // 默认不解析
+			flowChart       : true,  // 默认不解析
+			sequenceDiagram : true,  // 默认不解析
+		});
+
+	});
+
+
+
+
+	function setClipboard() {
+
+		var secretKey = $("input[name='secretKey']").val();
+		var textArea = document.createElement("textarea"); // 创建一个textarea元素
+		textArea.value = secretKey; // 设置文本内容
+		document.body.appendChild(textArea); // 添加到body中
+		textArea.select(); // 选中文本
+
+
+		try {
+			var successful = document.execCommand('copy'); // 尝试复制
+			var msg = successful ? 'successful' : 'unsuccessful';
+			layer.msg("已复制到剪切板")
+			document.body.removeChild(textArea); // 移除textarea元素
+			return successful;
+		} catch (err) {
+			console.error('Oops, unable to copy', err);
+			layer.msg(err)
+			document.body.removeChild(textArea); // 移除textarea元素
+			return false;
+		}
+
+
+	}
+
+</script>
+
+</body>
+</html>

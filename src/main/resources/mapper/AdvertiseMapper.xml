@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.AdvertiseMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Advertise">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="md" column="md" jdbcType="VARCHAR"/>
+            <result property="orient" column="orient" jdbcType="INTEGER"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,md,
+        orient,state,create_time
+    </sql>
+</mapper>

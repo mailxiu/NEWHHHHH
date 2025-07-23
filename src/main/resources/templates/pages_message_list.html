@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+  <meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+  <title>短信列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="js/bootstrap-select/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">短信列表</div></header>
+        <div class="card-body">
+          <div class="card-search mb-2-5">
+            <form id="search_form" class="search-form" method="get" action="message_list" role="form">
+              <input type="hidden" name="size" th:value="${iPage.size}">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 会员UID</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="uid" th:value="${session.message_uid}" placeholder="请输入会员UID" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 阅读状态</label>
+                    <div class="col-sm-8">
+                      <select name="state" class="form-select">
+                        <option value="">查询全部</option>
+                        <option value="1" th:selected="${session.message_state == 1}">已读</option>
+                        <option value="0" th:selected="${session.message_state == 0}">未读</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                  <button type="reset" class="btn btn-default">重置</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#slideModal" data-bs-whatever="@mdo"><i class="mdi mdi-check"></i> 新建</a>
+            <a class="btn btn-primary me-1" id="deleteRead"><i class="mdi mdi-delete"></i> 删除已读</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>会员UID</th>
+                  <th>标题</th>
+                  <th>内容</th>
+                  <th>状态</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.id}">1</td>
+                  <td th:text="${item.uid}">1</td>
+                  <td th:text="${item.title}">第01章 天涯思君不可忘</td>
+                  <td th:text="${item.info}">第01章 天涯思君不可忘</td>
+                  <td>
+                    <span th:if="${item.state==1}" class="text-success">已读</span>
+                    <span th:if="${item.state==0}" class="text-secondary">未读</span>
+                  </td>
+                  <td th:text="${#dates.format(item.createTime,'yyyy-MM-dd HH:mm:ss')}">36</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="btn btn-default m-2 delete" th:data-id="${item.id}" data-bs-toggle="tooltip" title="删除"><i class="mdi mdi-window-close"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+              <tr th:if="${list.size()==0}">
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+          <ul th:if="${list.size()!=0}" class="pagination">
+            <li class="page-item" style="user-select: none;pointer-events: none;">
+              <a class="page-link">
+                <span aria-hidden="true" th:text="${'共'+iPage.total+'条'}"></span>
+              </a>
+            </li>
+            <li class="page-item" th:classappend="${iPage.current==1} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current-1)+'&size='+iPage.size+'&action=page'}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex=1'+'&size='+iPage.size+'&action=page'}">首页</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" th:text="${iPage.current+'/'+iPage.getPages()}">页码</a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${view+'?pageIndex='+iPage.getPages()+'&size='+iPage.size+'&action=page'}">尾页</a></li>
+            <li class="page-item" th:classappend="${(iPage.current+1)>iPage.getPages()} ? 'disabled' : ''">
+              <a class="page-link" th:href="${view+'?pageIndex='+(iPage.current+1)+'&size='+iPage.size+'&action=page'}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+            <li class="page-item" style="margin-right: 6px">
+              <select class="form-control selectpicker" id="pageSize">
+                <option th:selected="${iPage.size==10}" value="10" selected>10条/页</option>
+                <option th:selected="${iPage.size==20}" value="20">20条/页</option>
+                <option th:selected="${iPage.size==30}" value="30">30条/页</option>
+                <option th:selected="${iPage.size==50}" value="50">50条/页</option>
+              </select>
+            </li>
+            <li class="page-item">
+              <form th:action="${view}" class="input-group">
+                <input type="hidden" name="size" th:value="${iPage.size}">
+                <input type="hidden" name="action" value="page">
+                <input type="text" style="width: auto" name="pageIndex" class="form-control" th:value="${iPage.current}">
+                <button class="btn btn-default" type="submit" id="button-addon2">跳转</button>
+              </form>
+            </li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<div class="modal fade" id="slideModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">新增</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="notify_form" method="post" action="message/add"  onsubmit="return false;">
+          <div class="mb-3">
+            <label for="recipient-title" class="col-form-label">消息标题：</label>
+            <input type="text" class="form-control" name="title" value="提示" placeholder="请输入消息标题" id="recipient-title">
+          </div>
+          <div class="mb-3">
+            <label for="recipient-uid" class="col-form-label">会员UID：</label>
+            <input type="text" class="form-control" name="uid" id="recipient-uid" value="" placeholder="请输入会员UID">
+          </div>
+          <div class="mb-3 col-md-12">
+            <label for="seo_description" class="form-label">消息内容：</label>
+            <textarea class="form-control" id="seo_description" name="info" rows="5" value="" placeholder="请输入消息内容"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <button id="save" type="button" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script>
+
+  $('#pageSize').change(function(){
+    $("input[name='size']").val($(this).val());
+    $('#search_form').submit();
+  });
+
+  var myModal = document.getElementById('slideModal')
+  myModal.addEventListener('hidden.bs.modal', function (event) {
+    location.reload();
+  })
+
+  //新增公告
+  $("#save").click(function () {
+
+    $("#notify_form").ajaxSubmit(function (result) {
+
+      if(result.code==0){
+        layer.msg("数据添加成功");
+      }else{
+
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+
+  //删除系统内的已读消息
+  $("#deleteRead").click(function () {
+
+    layer.confirm('确认要删除已读的消息？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/message/deleteRead',
+        type: 'delete',
+        // 设置的是请求参数
+        data: {},
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+
+  $(".delete").click(function () {
+
+    let id = $(this).attr("data-id");
+
+    layer.confirm('确认要删除选中的消息？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/message/del',
+        type: 'delete',
+        // 设置的是请求参数
+        data: {
+          id: id
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+</script>
+</body>
+</html>

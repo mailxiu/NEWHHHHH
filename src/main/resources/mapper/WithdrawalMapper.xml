@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.WithdrawalMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Withdrawal">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="oid" column="oid" jdbcType="VARCHAR"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="uid" column="uid" jdbcType="INTEGER"/>
+            <result property="points" column="points" jdbcType="DOUBLE"/>
+            <result property="chargeMoney" column="charge_money" jdbcType="DOUBLE"/>
+            <result property="realMoney" column="real_money" jdbcType="DOUBLE"/>
+            <result property="alipayName" column="alipay_name" jdbcType="VARCHAR"/>
+            <result property="alipayAccount" column="alipay_account" jdbcType="VARCHAR"/>
+            <result property="paymentCode" column="payment_code" jdbcType="VARCHAR"/>
+            <result property="info" column="info" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,oid,merchant,
+        uid,points,charge_money,
+        real_money,alipay_name,alipay_account,
+        payment_code,info,state,
+        create_time
+    </sql>
+</mapper>

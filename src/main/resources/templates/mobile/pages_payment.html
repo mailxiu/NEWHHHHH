@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<title>卖货保证金计划</title>
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="/css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/js/editor.md/css/editormd.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/style.min.css">
+<style>
+
+    body{
+        background-color: #0a001f;
+    }
+
+    /* 动画定义 */
+    @keyframes zoomInOut {
+        0%, 100% {
+            transform: scale(1); /* 初始及结束时为原始大小 */
+        }
+        50% {
+            transform: scale(1.02); /* 放大到1.5倍 */
+        }
+    }
+
+    /* 应用动画 */
+    .animate {
+        animation: zoomInOut 1.5s infinite; /* 持续时间为2秒，无限循环 */
+    }
+
+    .recharge-amount li {
+        width: 45%;
+        cursor: pointer;
+        margin: 0px 5px 10px;
+        padding: 15px 15px;
+        color: #4d5259;
+        text-align: center;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border: 3px solid transparent;
+        -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, .175);
+        box-shadow: 0 0 2px rgba(0, 0, 0, .175);
+    }
+    .recharge-amount li.active {
+        background-color: #ffffd2!important;
+    }
+    .recharge-amount li input {
+        display: none;
+    }
+
+    table, th, td {
+        border: 1px solid #228d84;
+        border-collapse: collapse;
+        padding: 5px;
+        text-align: center;
+        color: white;
+    }
+
+</style>
+</head>
+  
+<body>
+<div style="position: relative;display: flex;flex-direction: column;align-items: center;width: 100%" >
+
+    <input type="hidden" name="openid" th:value="${openid}">
+    <input type="hidden" name="unionid" th:value="${unionid}">
+    <input type="hidden" name="service_url" th:value="${service_url}">
+
+
+    <div style="width: 100%;height: auto;text-align: center;height: 100px;margin-top: 20px;">
+        <span style="font-size: 20px;color: white;font-weight: 600;line-height: 100px;color: #f7d3a6;">卖货保证金计划</span>
+    </div>
+
+
+    <div style="width: 100%;height: auto;text-align: center;display: flex;justify-content: center;align-items: center;">
+
+        <div style="width: 95%;height: auto;background-color: #f8f8e9;border-radius: 15px;padding: 25px;box-sizing: border-box">
+
+            <div style="width: 100%;height: auto;">
+                <ul class="list-inline recharge-amount">
+                    <li th:each="item,customerStat : ${list}" class="list-inline-item" >
+                        <input type="radio" name="sort" th:value="${item.sort}" />
+                        <p th:text="${item.name}" style="font-size: 20px">会员名称</p>
+                        <p th:text="${'￥'+item.price+'元'}" style="font-size: 24px;color: #dd0000">会员价格</p>
+                        <p th:text="${item.periodRefer}" style="font-size: 15px;color: #b6b6b6">会员价格</p>
+                    </li>
+                </ul>
+
+            </div>
+
+
+            <div th:if="${onlinePayment==1}" onclick="createOrder('WeChatJSAPI')" style="width: 100%;height: 70px;border-radius: 45px;background-image: linear-gradient(#EFCF9E, #E4BF85);text-align: center;margin-top: 35px;">
+                <text style="line-height: 70px;font-size: 20px;font-weight: 600;letter-spacing: 5px;">微信支付</text>
+            </div>
+
+            <div th:if="${onlineAlipay==1}" onclick="createOrder('Alipay')" style="width: 100%;height: 70px;border-radius: 45px;background-image: linear-gradient(#EFCF9E, #E4BF85);text-align: center;margin-top: 35px;">
+                <text style="line-height: 70px;font-size: 20px;font-weight: 600;letter-spacing: 5px;">支付宝支付</text>
+            </div>
+
+            <div style="width: 100%;height: auto;margin-top: 25px;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+                <div style="display: flex;align-items: center;position: relative;">
+                    <input type="radio" name="agreement" value="1">
+                    <span style="font-size: 14px;font-weight: 600;margin-left: 5px;">我已详细阅读并同意</span>
+                    <a onclick="userArticle" style="line-height: 40px;font-size: 14px;font-weight: 600;" href="/open/bond_article">《卖货保证金计划协议》</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div style="width: 100%;height: auto;text-align: center;height: 100px;margin-top: 20px;">
+        <span style="font-size: 20px;color: white;font-weight: 600;line-height: 100px;color: #f7d3a6;">套餐权益说明</span>
+    </div>
+
+    <div style="width: 100%;height: auto;display: flex;flex-direction: row;justify-content: center;margin-bottom: 60px">
+        <table style="width: 95%">
+            <tr style="background-color: #000000">
+                <td>套餐</td>
+                <td th:each="item,customerStat : ${list}">
+                    <img style="width: 15px;margin-bottom: 3px" th:if="${customerStat.index==0}" src="/images/vip_y.png">
+                    <img style="width: 15px;margin-bottom: 3px" th:if="${customerStat.index==1}" src="/images/vip_j.png">
+                    <span th:text="${item.name}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>日扫码次数</td>
+                <td th:each="item,customerStat : ${list}" th:text="${item.total==10000000?'无限制':item.total}">日扫码次数</td>
+            </tr>
+            <tr>
+                <td>卖货收益比例</td>
+                <td th:each="item,customerStat : ${list}" th:text="${#numbers.formatDecimal(item.gain * 100, 1, 0)}+'%'">卖货增益</td>
+            </tr>
+            <tr>
+                <td>推广佣金</td>
+                <td th:each="item,customerStat : ${list}">
+                    <p th:if="${item.directSpread!=0.0}"  th:text="${item.directSpread==0.0?'无佣金':'直推'+#numbers.formatDecimal(item.directSpread * 100, 1, 0)}+'%'"></p>
+                    <p th:if="${item.indirectSpread!=0.0}" th:text="${item.indirectSpread==0.0?'无佣金':'团队'+#numbers.formatDecimal(item.indirectSpread * 100, 1, 0)}+'%'"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>团队卖货提成</td>
+                <td th:each="item,customerStat : ${list}">
+                    <span th:if="${item.present==0.0}">无提成</span>
+                    <span th:if="${item.present!=0.0}" th:text="${#numbers.formatDecimal(item.present * 100, 1, 0)}+'%'">下级卖货提成</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+<script type="text/javascript" src="/js/layer/layer.js"></script>
+
+
+<script>
+
+    //创建支付订单
+    function createOrder(paymentType) {
+
+        let sort = $('input[name="sort"]:checked').val();
+        if ((typeof(sort) =='undefined')) {
+            layer.msg('您未选择充值套餐');
+            return false;
+        }
+
+        let agreement = $('input[name="agreement"]:checked').val();
+        if ((typeof(agreement) =='undefined')) {
+            layer.msg('您未同意卖货保证金计划协议');
+            return false;
+        }
+
+        let openid = $("input[name='openid']").val();
+
+        let unionid = $("input[name='unionid']").val();
+
+        var service_url = $("input[name='service_url']").val();
+
+
+        $.ajax({
+            url: '/api/order_add',
+            type: 'POST',
+            // 设置的是请求参数
+            data: JSON.stringify({
+                openid:openid,
+                unionid:unionid,
+                sort:sort,
+                paymentType:paymentType
+            }),
+            contentType: 'application/json',
+
+            success: function (data) {
+
+                if(data.code ==20000){//区分是公众号支付还是支付宝支付
+
+                    if(paymentType=='WeChatJSAPI'){
+
+                        weChatPay(data.data);
+
+                    }else if(paymentType == 'Alipay'){
+                        window.location = service_url+'/open/alipay_payment?oid='+data.msg
+                    }
+
+                }else{
+                    layer.msg(data.msg)
+                }
+
+            },
+            error: function(error) {
+                // 请求失败时的处理逻辑
+                alert("请求失败", error);
+            }
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+    
+    function weChatPay(data) {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                "appId": data.appId,     //公众号ID，由商户传入
+                "timeStamp": data.timeStamp,     //时间戳，自1970年以来的秒数
+                "nonceStr": data.nonceStr,      //随机串
+                "package": data.packageVal,
+                "signType": data.signType,     //微信签名方式：
+                "paySign": data.paySign
+            },
+            function(res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    // 使用以上方式判断前端返回,微信团队郑重提示：
+                    //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠，商户需进一步调用后端查单确认支付结果。
+                }else{
+                    layer.msg('取消支付')
+                }
+            });
+    }
+
+    function onBridgeReady() {}
+
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on('click', '.recharge-amount li', function() {
+            $(this).addClass('active').siblings().removeClass('active');
+            $(this).siblings().find('input').prop('checked', 0);
+            $(this).find('input').prop('checked', 1);
+        });
+    });
+</script>
+
+
+</body>
+</html>

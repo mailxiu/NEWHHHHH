@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>编辑商品详情 - 收码乐烟盒回收营销系统</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="js/editor.md/css/editormd.min.css" />
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<style>
+
+</style>
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  <div class="row">
+
+  	<div class="col-lg-12">
+  	  <div class="card">
+  		<div class="card-body">
+
+			<form id="markdown_form" action="/markdown/update" method="post" class="row" onsubmit="return false;">
+
+				<input type="hidden" name="id" th:value="${markdown.id}">
+
+				<div class="mb-3 col-md-12">
+					<label for="type" class="form-label">文章类别</label>
+					<div class="form-controls">
+						<select name="album" class="form-select" id="type">
+							<option th:each="enum:${albumEnum}" th:value="${enum.album}" th:text="${enum.desc}" th:selected="${enum.album} eq ${markdown.album.album}">类别</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="mb-3 col-md-12">
+					<label for="name" class="form-label">标题</label>
+					<input type="text" class="form-control" id="name" name="name" th:value="${markdown.name}" placeholder="请输入标题" />
+				</div>
+
+				<div class="mb-3 col-md-12">
+					<label for="sort" class="form-label">排序</label>
+					<input type="text" class="form-control" id="sort" name="sort" th:value="${markdown.sort}" />
+				</div>
+
+				<div class="mb-3 col-md-12">
+					<div id="test-editor">
+						<textarea name="md" th:text="${markdown.md}" style="display:none;"></textarea>
+					</div>
+				</div>
+				<div class="mb-3 col-md-12">
+					<button type="button" id="keepData" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+					<button type="reset" class="btn btn-default">返 回</button>
+				</div>
+			</form>
+
+
+  	    </div>
+  	  </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<!--表单处理插件-->
+<script type="text/javascript" src="js/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/editor.md/editormd.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+		var testEditor = editormd("test-editor", {
+			height : "600",
+			tex:true,
+			tocm:true,
+			taskList:true,
+			codeFold:true,
+			searchReplace:true,
+			flowChart:true,
+			sequenceDiagram:true,
+			path   : "js/editor.md/lib/",
+			htmlDecode : '"style,script,iframe', // 开启标签
+			imageUpload : true,
+			imageUploadURL:'/upload_markdown',
+			toolbarIcons : function() {
+				// Or return editormd.toolbarModes[name]; // full, simple, mini
+				// Using "||" set icons align right.
+				return ["undo", "redo", "|", "bold", "del",'italic','quote','uppercase','h1','h2','h3','h4','list-ul','list-ol','hr','link','reference-link','image','code','preformatted-text','code-block','table','datetime','html-entities', "htmlBox","richText","colorDisc","||", "watch", "fullscreen", "help"]
+			},
+
+			toolbarIconsClass : {
+				htmlBox : "fa-codepen",  // 创建一个盒子容器
+				richText : "fa-book",  // 创建一个富文本
+				colorDisc : "fa-adjust"  // 选色器
+			},
+			toolbarHandlers : {
+				/**
+				 * @param {Object}      cm         CodeMirror对象
+				 * @param {Object}      icon       图标按钮jQuery元素对象
+				 * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+				 * @param {String}      selection  编辑器选中的文本
+				 */
+				htmlBox : function(cm, icon, cursor, selection) {
+					testEditor.executePlugin("htmlDialog", "../plugins/html-dialog/html-dialog");
+				},
+				richText : function(cm, icon, cursor, selection) {
+					testEditor.executePlugin("cssDialog", "../plugins/css-dialog/css-dialog");
+				},
+				colorDisc : function(cm, icon, cursor, selection) {
+					testEditor.executePlugin("colorDialog", "../plugins/color-dialog/color-dialog");
+				}
+			},
+			lang : {//设置工具栏的提示文字
+				toolbar : {
+					htmlBox : "简单富文本",  // 自定义按钮的提示文本，即title属性
+					richText : "HTML内联样式",  // 自定义按钮的提示文本，即title属性
+					colorDisc : "替换选中的颜色",  // 自定义按钮的提示文本，即title属性
+				}
+			},
+			onload : function() {
+				var keyMap = {
+					"Alt-Enter": function(cm, icon, cursor, selection) {
+						testEditor.executePlugin("colorDialog", "../plugins/color-dialog/color-dialog");
+					}
+				};
+
+				this.addKeyMap(keyMap);
+			}
+		});
+	});
+</script>
+<script type="text/javascript">
+	$(function () {
+		$("#keepData").click(function () {
+
+			$("#markdown_form").ajaxSubmit(function (result) {
+
+				if(result.code==0){
+					layer.msg("数据修改成功");
+				}else{
+
+					layer.msg("数据修改失败");
+				}
+			});
+		});
+	});
+</script>
+</body>
+</html>

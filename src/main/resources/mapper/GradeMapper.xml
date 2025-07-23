@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.GradeMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Grade">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="price" column="price" jdbcType="DOUBLE"/>
+            <result property="gain" column="gain" jdbcType="DOUBLE"/>
+            <result property="total" column="total" jdbcType="INTEGER"/>
+            <result property="spread" column="spread" jdbcType="DOUBLE"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="present" column="present" jdbcType="DOUBLE"/>
+            <result property="creatTime" column="creat_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,name,
+        sort,price,gain,
+        total,spread,state,
+        present,creat_time
+    </sql>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.PaymentConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.PaymentConfig">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchantId" column="merchant_id" jdbcType="VARCHAR"/>
+            <result property="merchantSerialNumber" column="merchant_serial_number" jdbcType="VARCHAR"/>
+            <result property="apiV3Key" column="api_v3_key" jdbcType="VARCHAR"/>
+            <result property="privateKeyFromPath" column="private_key_from_path" jdbcType="VARCHAR"/>
+            <result property="publicKeyFromPath" column="public_key_from_path" jdbcType="VARCHAR"/>
+            <result property="publicKeyId" column="public_key_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant_id,merchant_serial_number,
+        api_v3_key,private_key_from_path,public_key_from_path,
+        public_key_id
+    </sql>
+</mapper>

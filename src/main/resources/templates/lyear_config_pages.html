@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>网站配置 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link rel="stylesheet" type="text/css" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">系统配置</div></header>
+        <div class="card-body">
+          
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link" id="basic-ys" data-bs-toggle="tab" data-bs-target="#ys" type="button">运营配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-upload" data-bs-toggle="tab" data-bs-target="#system" type="button">系统配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-article" data-bs-toggle="tab" data-bs-target="#article" type="button">文章预设配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-message" data-bs-toggle="tab" data-bs-target="#message" type="button">阿里云短信配置</button>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" id="basic-preset" data-bs-toggle="tab" data-bs-target="#preset" type="button">系统预设配置</button>
+            </li>
+
+          </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="ys" aria-labelledby="basic-sys">
+
+                <form action="/config/configure" id="configure_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+
+                  <div class="mb-3">
+                    <label class="form-label">支付路由配置</label>
+                    <div class="form-controls">
+                      <select name="paymentRouting" class="form-select">
+                        <option th:selected="${configure!=null&&configure.paymentRouting eq 'Native'}" value="Native">公众号和原生支付混合</option>
+                        <option th:selected="${configure!=null&&configure.paymentRouting eq 'Mixed'}" value="Mixed">公众号和杉德支付混合</option>
+                      </select>
+                    </div>
+                    <small class="form-text">注意：<code>原生支付为微信小程序支付</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">支付渠道管理</label>
+                    <div class="form-controls">
+                      <select name="paymentProvider" class="form-select">
+                        <option th:selected="${configure!=null&&configure.paymentProvider eq 'official'}" value="official">公众号支付</option>
+                        <option th:selected="${configure!=null&&configure.paymentProvider eq 'sendPay'}" value="sendPay">杉德支付</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否强制联系客服</label>
+                    <div class="form-controls">
+                      <select name="onlineCustomer" class="form-select">
+                        <option th:selected="${configure!=null&&configure.onlineCustomer==0}" value="0">关闭</option>
+                        <option th:selected="${configure!=null&&configure.onlineCustomer==1}" value="1">开启</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否开启微信支付</label>
+                    <div class="form-controls">
+                      <select name="onlinePayment" class="form-select">
+                        <option th:selected="${configure!=null&&configure.onlinePayment==0}" value="0">关闭</option>
+                        <option th:selected="${configure!=null&&configure.onlinePayment==1}" value="1">开启</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否开启支付宝支付</label>
+                    <div class="form-controls">
+                      <select name="onlineAlipay" class="form-select">
+                        <option th:selected="${configure!=null&&configure.onlineAlipay==0}" value="0">关闭</option>
+                        <option th:selected="${configure!=null&&configure.onlineAlipay==1}" value="1">开启</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否弹出首页公告</label>
+                    <div class="form-controls">
+                      <select name="indexAd" class="form-select">
+                        <option th:selected="${configure!=null&&configure.indexAd==0}" value="0">隐藏</option>
+                        <option th:selected="${configure!=null&&configure.indexAd==1}" value="1">显示</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否显示开通会员</label>
+                    <div class="form-controls">
+                      <select name="marketing" class="form-select">
+                        <option th:selected="${configure!=null&&configure.marketing==0}" value="0">隐藏</option>
+                        <option th:selected="${configure!=null&&configure.marketing==1}" value="1">显示</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否开启积分提现</label>
+                    <div class="form-controls">
+                      <select name="extract" class="form-select">
+                        <option th:selected="${configure!=null&&configure.extract==0}" value="0">隐藏</option>
+                        <option th:selected="${configure!=null&&configure.extract==1}" value="1">显示</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否开启微信登录</label>
+                    <div class="form-controls">
+                      <select name="wechatLogin" class="form-select">
+                        <option th:selected="${configure!=null&&configure.wechatLogin==0}" value="0">隐藏</option>
+                        <option th:selected="${configure!=null&&configure.wechatLogin==1}" value="1">显示</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">是否开启苹果登录</label>
+                    <div class="form-controls">
+                      <select name="appleLogin" class="form-select">
+                        <option th:selected="${configure!=null&&configure.appleLogin==0}" value="0">隐藏</option>
+                        <option th:selected="${configure!=null&&configure.appleLogin==1}" value="1">显示</option>
+                      </select>
+                    </div>
+                  </div>
+
+
+                  <div class="mb-3">
+                    <label class="form-label">是否正在上架审核</label>
+                    <div class="form-controls">
+                      <select name="examine" class="form-select">
+                        <option th:selected="${configure!=null&&configure.examine==0}" value="0">在审核</option>
+                        <option th:selected="${configure!=null&&configure.examine==1}" value="1">未审核</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="version" class="form-label">审核中的版本号</label>
+                    <input class="form-control" type="text" id="version" name="version" th:value="${configure==null?'':configure.version}">
+                    <small class="form-text">审核屏蔽开关仅针对审核版本生效，版本1.0.9则填写109</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="brands" class="form-label">审核中的品牌</label>
+                    <input class="form-control" type="text" id="brands" name="brands" th:value="${configure==null?'':configure.brands}">
+                    <small class="form-text">多个品牌用英文逗号分隔，如：apple,huawei。留空则全部品牌都不在审核模式。</small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="configure_btn" class="btn btn-primary me-1">确 定</button>
+                    <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button>
+                  </div>
+                </form>
+
+              </div>
+
+              <div class="tab-pane fade" id="system" aria-labelledby="basic-upload">
+
+                <form action="/config/system" id="system_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+
+                  <div class="mb-3">
+                    <label for="serviceUrl" class="form-label">服务域名</label>
+                    <input class="form-control" type="text" id="serviceUrl" name="serviceUrl" th:value="${system==null?'':system.serviceUrl}">
+                    <small class="form-text">提供系统API服务的域名</small>
+                  </div>
+                  <div class="mb-3">
+                    <label for="galleryUrl" class="form-label">图库域名</label>
+                    <input class="form-control" type="text" id="galleryUrl" name="galleryUrl" th:value="${system==null?'':system.galleryUrl}">
+                    <small class="form-text">系统图库域名</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="galleryRoute" class="form-label">图库路径</label>
+                    <input class="form-control" type="text" id="galleryRoute" name="galleryRoute" th:value="${system==null?'':system.galleryRoute}">
+                    <small class="form-text">系统图库域名</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="websiteTitle" class="form-label">网站名称</label>
+                    <input class="form-control" type="text" id="websiteTitle" name="websiteTitle" th:value="${system==null?'':system.websiteTitle}">
+                    <small class="form-text">请输入网站名称</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="menuTitle" class="form-label">侧边菜单名称</label>
+                    <input class="form-control" type="text" id="menuTitle" name="menuTitle" th:value="${system==null?'':system.menuTitle}">
+                    <small class="form-text">请输入侧边菜单名称</small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="system_btn" class="btn btn-primary me-1">确 定</button>
+                    <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button>
+                  </div>
+
+                </form>
+
+              </div>
+
+              <div class="tab-pane fade" id="article" aria-labelledby="basic-article">
+
+                <form action="/config/article" id="article_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+
+                  <div class="mb-3">
+                    <label for="userArticle" class="form-label">用户协议</label>
+                    <input class="form-control" type="text" id="userArticle" name="userArticle" th:value="${article==null?'':article.userArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="privacyArticle" class="form-label">隐私协议</label>
+                    <input class="form-control" type="text" id="privacyArticle" name="privacyArticle" th:value="${article==null?'':article.privacyArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="cancelArticle" class="form-label">注销协议</label>
+                    <input class="form-control" type="text" id="cancelArticle" name="cancelArticle" th:value="${article==null?'':article.cancelArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="memberArticle" class="form-label">会员必读</label>
+                    <input class="form-control" type="text" id="memberArticle" name="memberArticle" th:value="${article==null?'':article.memberArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="customerArticle" class="form-label">在线客服</label>
+                    <input class="form-control" type="text" id="customerArticle" name="customerArticle" th:value="${article==null?'':article.customerArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="courseArticle" class="form-label">新手教程</label>
+                    <input class="form-control" type="text" id="courseArticle" name="courseArticle" th:value="${article==null?'':article.courseArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="courseArticle" class="form-label">保证金协议</label>
+                    <input class="form-control" type="text" id="bondArticle" name="bondArticle" th:value="${article==null?'':article.bondArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="guideArticle" class="form-label">引导协议</label>
+                    <input class="form-control" type="text" id="guideArticle" name="guideArticle" th:value="${article==null?'':article.guideArticle}" placeholder="文章id">
+                    <small class="form-text">源自：<code>本系统文章管理：文章id</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="article_btn" class="btn btn-primary me-1">确 定</button>
+                    <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button>
+                  </div>
+                </form>
+
+              </div>
+
+              <div class="tab-pane fade" id="message" aria-labelledby="basic-message">
+
+                <form action="/config/message" id="message_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label class="form-label">accessKeyId</label>
+                    <input class="form-control" type="text" name="accessKeyId" th:value="${message==null?'':message.accessKeyId}" placeholder="请输入accessKeyId">
+                    <small class="form-text">源自：<code>阿里云RAM子账户：accessKeyId</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">accessKeySecret</label>
+                    <input class="form-control" type="text" name="accessKeySecret" th:value="${message==null?'':message.accessKeySecret}" placeholder="请输入accessKeySecret">
+                    <small class="form-text">源自：<code>阿里云RAM子账户：accessKeySecret</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">regionId</label>
+                    <input class="form-control" type="text" name="regionId" th:value="${message==null?'':message.regionId}" placeholder="请输入regionId">
+                    <small class="form-text">源自：<code>regionId</code></small>
+                  </div>
+
+
+                  <div class="mb-3">
+                    <label class="form-label">signName</label>
+                    <input class="form-control" type="text" name="signName" th:value="${message==null?'':message.signName}" placeholder="请输入signName">
+                    <small class="form-text">源自：<code>signName</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">templateCode</label>
+                    <input class="form-control" type="text" name="templateCode" th:value="${message==null?'':message.templateCode}" placeholder="请输入templateCode">
+                    <small class="form-text">源自：<code>templateCode</code></small>
+                  </div>
+
+
+                  <div>
+                    <button type="button" id="message_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+
+                </form>
+
+              </div>
+
+              <div class="tab-pane fade" id="preset" aria-labelledby="basic-preset">
+
+                <form action="/config/preset" id="preset_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label class="form-label">defaultPortrait</label>
+                    <input class="form-control" type="text" name="defaultPortrait" th:value="${preset==null?'':preset.defaultPortrait}" placeholder="请输入图片URL">
+                    <small class="form-text">源自：<code>未绑定微信的用户默认头像</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">projectPortrait</label>
+                    <input class="form-control" type="text" name="projectPortrait" th:value="${preset==null?'':preset.projectPortrait}" placeholder="请输入图片URL">
+                    <small class="form-text">源自：<code>未知项目的默认图标</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="preset_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+
+                </form>
+
+              </div>
+
+            </div>
+
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script>
+
+  //配置微信支付参数
+  $("#payment_btn").click(function () {
+
+    $("#payment_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+  //配置易达178参数
+  $("#applet_btn").click(function () {
+
+    $("#applet_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+  $("#configure_btn").click(function () {
+
+    $("#configure_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+
+  $("#system_btn").click(function () {
+
+    $("#system_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+  $("#article_btn").click(function () {
+
+    $("#article_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+  $("#preset_btn").click(function () {
+
+    $("#preset_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("保存成功");
+      }else{
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+  //手动刷新token
+  $('#token_btn').click(function() {
+
+    $.ajax({
+      url: '/service/refresh_token',
+      type: 'post',
+      // 设置的是请求参数
+      data: {},
+      dataType: 'html',
+      traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+      success: function (res) {
+
+        let data = JSON.parse(res);
+
+        if(data.code ==20000){
+          layer.msg("刷新成功")
+        }else{
+          layer.msg(data.msg)
+        }
+      }
+    });
+
+  });
+
+
+
+
+</script>
+</body>
+</html>

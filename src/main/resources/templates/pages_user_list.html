@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>会员列表 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">用户列表</div></header>
+        <div class="card-body">
+          <div class="card-search mb-2-5">
+            <form class="search-form" method="post" action="/user_list" role="form">
+              
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 商户号</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control pull-left" name="uid" placeholder="请输入商户号" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 状态</label>
+                    <div class="col-sm-8">
+                      <select name="partner" class="form-select">
+                          <option value="1">正常</option>
+                          <option value="0">封禁</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                  <button type="reset" class="btn btn-default">重置</button>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1" data-bs-toggle="modal" data-bs-target="#slideModal" data-bs-whatever="@mdo"><i class="mdi mdi-plus"></i> 新增</a>
+            <a class="btn btn-success me-1" href="#!"><i class="mdi mdi-check"></i> 启用</a>
+            <a class="btn btn-warning me-1" href="#!"><i class="mdi mdi-block-helper"></i> 禁用</a>
+            <a class="btn btn-danger" id="deleteAll"><i class="mdi mdi-window-close"></i> 删除</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="check-all">
+                      <label class="form-check-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th>ID</th>
+                  <th>商户号</th>
+                  <th>名称</th>
+                  <th>APPID</th>
+                  <th>状态</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input ids" name="ids[]" th:value="${item.id}" id="ids-1">
+                      <label class="form-check-label" for="ids-1"></label>
+                    </div>
+                  </td>
+                  <td th:text="${item.id}">用户UID</td>
+                  <td th:text="${item.merchant}">商户号</td>
+                  <td th:text="${item.name}">名称</td>
+                  <td th:text="${item.appid}">微信标识</td>
+<!--                  <td>-->
+<!--                    <span th:if="${item.pattern.equals('operate')}" class="text-success">商家自营</span>-->
+<!--                    <span th:if="${item.pattern.equals('deposit')}" class="text-info">商家托管</span>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <span th:if="${item.design.equals('rank')}" class="text-success">级别分佣</span>-->
+<!--                    <span th:if="${item.design.equals('price')}" class="text-info">级差分佣</span>-->
+<!--                  </td>-->
+
+                  <td th:switch="${item.state}">
+                    <span th:case="0" class="text-danger">封禁</span>
+                    <span th:case="1" class="text-success">正常</span>
+                  </td>
+
+                  <td th:text="${item.createTime}">创建时间</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default delete" th:data-id="${item.id}" data-bs-toggle="tooltip" title="删除用户"><i class="mdi mdi-delete"></i></a>
+                      <a class="m-2 btn btn-default freeze"  th:data-id="${item.id}" data-state="0" data-bs-toggle="tooltip" title="冻结账户"><i class="mdi mdi-account-cancel"></i></a>
+                      <a class="m-2 btn btn-default freeze"  th:data-id="${item.id}" data-state="1" data-bs-toggle="tooltip" title="解除冻结"><i class="mdi mdi-account-check"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              <tfoot th:if="${list.size()==0}">
+                <tr>
+                  <td class="text-center" colspan="16">
+                    <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                      <img width="240px" src="images/empty.png">
+                      <span style="color: #8f8f8f">数据为空</span>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+              </tbody>
+            </table>
+          </div>
+
+          <ul th:if="${list.size()!=0}" class="pagination">
+            <li th:if="${iPage.current==1}" class="page-item disabled">
+              <a class="page-link"  aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li th:if="${(iPage.current-1)>=1}" class="page-item">
+              <a class="page-link" th:href="${'/user_list?pageIndex='+(iPage.current-1)}" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/user_list?pageIndex=1">首页</a></li>
+            <li class="page-item active" aria-current="page">
+              <a class="page-link" th:text="${iPage.current+'/'+iPage.getPages()}">2</a>
+            </li>
+            <li class="page-item"><a class="page-link" th:href="${'/user_list?pageIndex='+iPage.getPages()}">尾页</a></li>
+            <li th:if="${(iPage.current+1)<=iPage.getPages()}" class="page-item">
+              <a class="page-link" th:href="${'/user_list?pageIndex='+(iPage.current+1)}" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+            <li th:if="${(iPage.current+1)>iPage.getPages()}" class="page-item disabled">
+              <a class="page-link" aria-label="Next">
+                <span aria-hidden="true">»</span>
+              </a>
+            </li>
+
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<div class="modal fade" id="slideModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">新增</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="notify_form" method="post" action="user/add"  onsubmit="return false;">
+          <div class="mb-3">
+            <label class="col-form-label">用户名</label>
+            <input type="text" class="form-control" name="username" placeholder="请输入用户名">
+          </div>
+          <div class="mb-3">
+            <label class="col-form-label">密码</label>
+            <input type="text" class="form-control" name="password" placeholder="请输入密码">
+          </div>
+          <div class="mb-3">
+            <label class="col-form-label">小程序名称</label>
+            <input type="text" class="form-control" name="name" placeholder="请输入小程序名称">
+          </div>
+          <div class="mb-3">
+            <label class="col-form-label">小程序APPID</label>
+            <input type="text" class="form-control" name="appid" placeholder="请输入小程序APPID">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <button id="save" type="button" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script>
+
+  var myModal = document.getElementById('slideModal')
+  myModal.addEventListener('hidden.bs.modal', function (event) {
+    location.reload();
+  })
+
+  //新增公告
+  $("#save").click(function () {
+
+    $("#notify_form").ajaxSubmit(function (result) {
+
+      if(result.code==0){
+        layer.msg("数据添加成功");
+      }else{
+
+        layer.msg("数据添加失败");
+      }
+    });
+  });
+
+
+  //冻结账户
+  $(".freeze").click(function () {
+
+    let id = $(this).attr("data-id");
+
+    let state = $(this).attr("data-state");
+
+    layer.confirm('确定要修改此用户状态？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/user/update_freeze',
+        type: 'post',
+        // 设置的是请求参数
+        data: {
+          id:id,
+          state:state
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+  $(".delete").click(function () {
+
+    let id = $(this).attr("data-id");
+
+    layer.confirm('确认要删除选中的用户？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/user/del',
+        type: 'delete',
+        // 设置的是请求参数
+        data: {
+          id: id
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+</script>
+</body>
+</html>

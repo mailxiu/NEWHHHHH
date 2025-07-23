@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+  <meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+  <title>推广分佣 - 光年(Light Year Admin V5)后台管理系统模板</title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">推广分佣</div></header>
+        <div class="card-body">
+          <div class="card-btns mb-2-5">
+            <a class="btn btn-primary me-1 update" data-id="0"><i class="mdi mdi-plus"></i> 新增</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>关系</th>
+                  <th>请求等级</th>
+                  <th>响应等级</th>
+                  <th>分佣比例</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item,customerStat : ${list}">
+                  <td th:text="${customerStat.count}">《倚天屠龙记》</td>
+                  <td th:text="${item.relation=='direct'?'直接推荐':'间接推荐'}">1</td>
+                  <td th:text="${item.requestGrade}">《倚天屠龙记》</td>
+                  <td th:text="${item.responseGrade}">《倚天屠龙记》</td>
+                  <td th:text="${item.spread}">《倚天屠龙记》</td>
+                  <td>
+                    <div class="btn-group btn-group-sm">
+                      <a class="m-2 btn btn-default update" th:data-id="${item.id}" data-bs-toggle="tooltip" title="编辑"><i class="mdi mdi-pencil"></i></a>
+                      <a class="m-2 btn btn-default delete" th:data-id="${item.id}" data-bs-toggle="tooltip" title="删除"><i class="mdi mdi-delete"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot th:if="${list.size()==0}">
+              <tr>
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script>
+
+  $('.update').click(function() {
+
+    layer.open({
+      type: 2,
+      title: '推广分佣配置',
+      shadeClose: true,
+      shade: 0.5,
+      area: ['95%', '90%'],
+      content: '/dividend_update?id='+$(this).attr("data-id"), //iframe的url
+      end:function () {
+          location.reload();
+      }
+    });
+  });
+
+  //删除
+  $(".delete").click(function () {
+
+    let id = $(this).attr("data-id");
+
+    layer.confirm('确认要删除选中的分佣预设？', {
+      btn: ['确认', '取消'] //按钮
+    }, function(){
+      $.ajax({
+        url: '/dividend/del',
+        type: 'delete',
+        // 设置的是请求参数
+        data: {
+          id: id
+        },
+        dataType: 'html',
+        traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+        success: function (res) {
+
+          let data = JSON.parse(res);
+
+          if(data.code == 0){
+            location.reload();//刷新当前页面
+          }else{
+            layer.msg(data.msg)
+          }
+        }
+      });
+    }, function(){
+      layer.msg('已取消操作');
+    });
+
+  });
+
+</script>
+</body>
+</html>

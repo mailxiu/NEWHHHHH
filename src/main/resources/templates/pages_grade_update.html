@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>新增文档 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">等级编辑</div></header>
+        <div class="card-body">
+          
+          <form id="project_form" action="/grade/update" method="post" class="row" onsubmit="return false;">
+            <input type="hidden" class="form-control" name="id" th:value="${grade.id}" />
+            <div class="mb-3 col-md-12">
+              <label class="form-label">等级名称</label>
+              <input type="text" class="form-control" name="name" th:value="${grade.name}" placeholder="等级名称" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="price" class="form-label">等级</label>
+              <input type="text" class="form-control" id="sort" name="sort" th:value="${grade.sort}" placeholder="等级" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="price" class="form-label">升级价格</label>
+              <input type="text" class="form-control" id="price" name="price" th:value="${grade.price}" placeholder="升级所需价格" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="gain" class="form-label">增益</label>
+              <input type="number" class="form-control" id="gain" name="gain" th:value="${grade.gain}" placeholder="增益" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="present" class="form-label">卖货提成</label>
+              <input type="text" class="form-control" id="present" name="present" th:value="${grade.present}" placeholder="请输入卖货提成" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="present" class="form-label">直推会员返利</label>
+              <input type="text" class="form-control" id="directSpread" name="directSpread" th:value="${grade.directSpread}" placeholder="请输入直接推广返利" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="present" class="form-label">间推会员返利</label>
+              <input type="text" class="form-control" id="indirectSpread" name="indirectSpread" th:value="${grade.indirectSpread}" placeholder="请输入间接推广返利" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="total" class="form-label">扫码数/日</label>
+              <input type="number" class="form-control" id="total" name="total" th:value="${grade.total}" placeholder="限制扫码次数" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="period" class="form-label">有效期</label>
+              <input type="text" class="form-control" id="period" name="period" th:value="${grade.period}" placeholder="请输入有效期" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="periodRefer" class="form-label">有效期描述</label>
+              <input type="text" class="form-control" id="periodRefer" name="periodRefer" th:value="${grade.periodRefer}" placeholder="请输入有效期描述" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <button id="keepData" type="button" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--上传插件-->
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+
+  $(function () {
+    $("#keepData").click(function () {
+
+      $("#project_form").ajaxSubmit(function (result) {
+
+        layer.msg(result.msg);
+
+      });
+    });
+  });
+</script>
+</body>
+</html>

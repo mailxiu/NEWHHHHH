@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.AlipayAppPayConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.AlipayAppPayConfig">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="appid" column="appid" jdbcType="VARCHAR"/>
+            <result property="privateKey" column="private_key" jdbcType="VARCHAR"/>
+            <result property="alipayPublicKey" column="alipay_public_key" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,appid,private_key,
+        alipay_public_key
+    </sql>
+</mapper>

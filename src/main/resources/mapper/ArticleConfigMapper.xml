@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.ArticleConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.ArticleConfig">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userArticle" column="user_article" jdbcType="INTEGER"/>
+            <result property="privacyArticle" column="privacy_article" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_article,privacy_article
+    </sql>
+</mapper>

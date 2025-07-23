@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.ProjectMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Project">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="cid" column="cid" jdbcType="VARCHAR"/>
+            <result property="barCode" column="bar_code" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="image" column="image" jdbcType="VARCHAR"/>
+            <result property="points" column="points" jdbcType="DOUBLE"/>
+            <result property="pattern" column="pattern" jdbcType="VARCHAR"/>
+            <result property="checking" column="checking" jdbcType="TINYINT"/>
+            <result property="state" column="state" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,cid,
+        bar_code,name,image,
+        points,pattern,checking,
+        state,create_time
+    </sql>
+</mapper>

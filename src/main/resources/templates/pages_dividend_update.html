@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>新增修改推广分佣 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+
+        <header th:if="${dividend.id==0}" class="card-header"><div class="card-title">新增推广分佣</div></header>
+        <header th:if="${dividend.id!=0}" class="card-header"><div class="card-title">修改推广分佣</div></header>
+
+        <div class="card-body">
+          
+          <form id="project_form" action="/dividend/update" method="post" class="row" onsubmit="return false;">
+            <input type="hidden" class="form-control" name="id" th:value="${dividend.id}" />
+            <div class="mb-3 col-md-12">
+              <label for="relation" class="form-label">推荐类型</label>
+              <div class="form-controls">
+                <select name="relation" class="form-select" id="relation" th:disabled="${dividend.id!=0}">
+                  <option value="direct" th:selected="${dividend.relation eq 'direct'}">直接推荐</option>
+                  <option value="indirect" th:selected="${dividend.relation eq 'indirect'}">间接推荐</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="requestGrade" class="form-label">请求等级</label>
+              <input type="text" class="form-control" id="requestGrade" name="requestGrade" th:value="${dividend.requestGrade}" placeholder="请输入请求等级" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="responseGrade" class="form-label">响应等级</label>
+              <input type="text" class="form-control" id="responseGrade" name="responseGrade" th:value="${dividend.responseGrade}" placeholder="请输入响应等级" />
+            </div>
+
+            <div class="mb-3 col-md-12">
+              <label for="spread" class="form-label">分佣比例</label>
+              <input type="text" class="form-control" id="spread" name="spread" th:value="${dividend.spread}" placeholder="请输入分佣比例" />
+            </div>
+
+
+            <div class="mb-3 col-md-12">
+              <button id="keepData" type="button" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<!--上传插件-->
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<!--灯箱效果插件-->
+<script type="text/javascript" src="js/magnific-popup/magnific-popup.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+
+  $(function () {
+    $("#keepData").click(function () {
+
+      $("#project_form").ajaxSubmit(function (result) {
+
+        layer.msg(result.msg);
+
+      });
+    });
+  });
+</script>
+</body>
+</html>

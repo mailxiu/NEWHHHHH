@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.SystemConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.SystemConfig">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="serviceUrl" column="service_url" jdbcType="VARCHAR"/>
+            <result property="galleryUrl" column="gallery_url" jdbcType="VARCHAR"/>
+            <result property="galleryRoute" column="gallery_route" jdbcType="VARCHAR"/>
+            <result property="websiteTitle" column="website_title" jdbcType="VARCHAR"/>
+            <result property="menuTitle" column="menu_title" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,service_url,gallery_url,
+        gallery_route,website_title,menu_title
+    </sql>
+</mapper>

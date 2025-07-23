@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>投诉详情</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">投诉详情</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'投诉编号：'+complaint.complaintNumber}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'投诉类型：'+complaint.complaintRefer}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'会员UID：'+member.uid}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'会员昵称：'+member.name}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'更新时间：'+#dates.format(member.updateTime,'yyyy-MM-dd HH:mm:ss')}">更新时间</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'创建时间：'+#dates.format(member.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card" th:each="item,customerStat : ${itemList}">
+        <header class="card-header">
+          <div class="d-flex justify-content-between">
+            <div class="p-2 border-highlight" th:text="${item.sessionType eq 'platform'?'平台回复':'用户投诉'}">投诉来源</div>
+            <div class="p-2" th:text="${'创建时间：'+#dates.format(member.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</div>
+          </div>
+        </header>
+        <div class="card-body">
+          <div>
+            <blockquote  class="blockquote">
+              <p th:text="${item.content}">笑春风三尺花，骄白雪一团玉。痴凝秋水为神，瘦认梨云是骨。</p>
+            </blockquote>
+
+            <div class="hstack gap-3">
+              <div th:each="image,customerStat : ${item.images}" class="bg-light border">
+                <figure class="figure">
+                  <img style="width: 150px"  th:src="${image}" class="figure-img img-fluid rounded" alt="...">
+                </figure>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">回复投诉</div></header>
+        <div class="card-body">
+
+          <form id="project_form" action="complaint/replyComplaint" method="post" class="row" onsubmit="return false;">
+
+            <input type="hidden" name="id" th:value="${complaint.id}">
+
+            <div class="mb-3 col-md-12">
+              <label for="seo_description" class="form-label">描述</label>
+              <textarea class="form-control" id="seo_description" name="content" rows="5" value="" placeholder="描述"></textarea>
+            </div>
+
+            <div class="mb-3 col-md-12">
+              <button id="keepData" type="submit" class="btn btn-primary ajax-post" target-form="add-form">回复</button>
+              <button type="reset" class="btn btn-default" onclick="javascript:history.back(-1);return false;">清空</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" src="js/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+      $("#project_form").ajaxSubmit(function (result) {
+
+        if(result.code==0){
+           layer.msg("已回复");
+           location.reload()
+        }else{
+
+          layer.msg("保存失败");
+
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

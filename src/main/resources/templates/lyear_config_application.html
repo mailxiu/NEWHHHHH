@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>网站配置 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link rel="stylesheet" type="text/css" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">应用配置</div></header>
+        <div class="card-body">
+          
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link active" id="basic-applet" data-bs-toggle="tab" data-bs-target="#applet" type="button" >小程序配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-official" data-bs-toggle="tab" data-bs-target="#official" type="button">公众号配置</button>
+            </li>
+          </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="applet" aria-labelledby="basic-applet">
+
+                <form action="/config/applet" id="applet_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label class="form-label">Appid</label>
+                    <input class="form-control" type="text" name="appid" th:value="${applet==null?'':applet.appId}" placeholder="请输入Appid">
+                    <small class="form-text">源自：<code>小程序后台：Appid</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Secret</label>
+                    <input class="form-control" type="text" name="secret" th:value="${applet==null?'':applet.secret}" placeholder="请输入Secret">
+                    <small class="form-text">源自：<code>小程序后台：Secret</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="applet_btn" class="btn btn-primary me-1">确 定</button>
+                    <button type="button" id="token_btn" class="btn btn-primary">刷新Token</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="tab-pane fade" id="official" aria-labelledby="basic-official">
+
+                <form action="/config/official" id="official_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label class="form-label">Appid</label>
+                    <input class="form-control" type="text" name="appid" th:value="${official==null?'':official.appId}" placeholder="请输入appId">
+                    <small class="form-text">源自：<code>公众号后台：Appid</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Secret</label>
+                    <input class="form-control" type="text" name="appSecret" th:value="${official==null?'':official.appSecret}" placeholder="请输入appSecret">
+                    <small class="form-text">源自：<code>公众号后台：appSecret</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Appid</label>
+                    <input class="form-control" type="text" name="officialName" th:value="${official==null?'':official.officialName}" placeholder="请输入公众号名称">
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Appid</label>
+                    <input class="form-control" type="text" name="officialImage" th:value="${official==null?'':official.officialImage}" placeholder="请输入公众号二维码图片网址">
+                  </div>
+
+                  <div>
+                    <button type="button" id="official_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script>
+
+  //配置小程序
+  $("#applet_btn").click(function () {
+
+    $("#applet_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("数据保存成功");
+      }else{
+        layer.msg("数据保存失败");
+      }
+    });
+  });
+
+  //配置公众号
+  $("#official_btn").click(function () {
+
+    $("#official_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("数据保存成功");
+      }else{
+        layer.msg("数据保存失败");
+      }
+    });
+  });
+
+
+  //手动刷新token
+  $('#token_btn').click(function() {
+
+    $.ajax({
+      url: '/service/refresh_token',
+      type: 'post',
+      // 设置的是请求参数
+      data: {},
+      dataType: 'html',
+      traditional: true,//需要特别注意下traditional默认值是false。ajax做数据处理时，是通过jQuery.param( obj, traditional )该方法进行处理。
+
+      success: function (res) {
+
+        let data = JSON.parse(res);
+
+        if(data.code ==20000){
+          layer.msg("刷新成功")
+        }else{
+          layer.msg(data.msg)
+        }
+      }
+    });
+
+  });
+
+
+
+
+</script>
+</body>
+</html>

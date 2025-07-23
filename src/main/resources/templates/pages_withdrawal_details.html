@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>提现详情</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">支付宝信息</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'支付宝姓名：'+member.alipayName}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'支付宝账号：'+member.alipayAccount}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+
+              <figure class="figure">
+                <img style="width: 150px"  th:src="${member.wxPay}" class="figure-img img-fluid rounded" alt="...">
+              </figure>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">银行卡信息</div></header>
+        <div class="card-body">
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'银行卡-姓名：'+member.bankRealName}">会员昵称：蓝天</div>
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'银行卡-卡号：'+member.bankCardNumber}">收件人：苏女士</div>
+            </div>
+          </div>
+
+          <div class="vstack gap-3">
+            <div class="clearfix" style="display: flex">
+              <div style="flex: 1;text-align: left" class="float-start" th:text="${'银行卡-开户行：'+member.bankAccountName}">会员昵称：蓝天</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--通知消息插件-->
+<script type="text/javascript" src="js/bootstrap-notify.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(document).on('click', '.file-browser', function() {//点击上传图片
+
+      console.log('点击上传图片');
+
+      var $browser = $(this);
+      var file = $browser.closest('.file-group').find('[type="file"]');
+      file.on( 'click', function(e) {
+        e.stopPropagation();
+      });
+      file.trigger('click');
+    });
+
+    $(document).on('change', '.file-group [type="file"]', function() {
+      console.log('文件内容发生改变');
+      var $this    = $(this);
+      var $input   = $(this)[0];
+      var $len     = $input.files.length;
+      var formFile = new FormData();
+
+      if ($len == 0) {
+        return false;
+      } else {
+        var fileAccaccept = $this.attr('accaccept');
+        var fileType      = $input.files[0].type;
+        var type          = (fileType.substr(fileType.lastIndexOf("/") + 1)).toLowerCase();
+
+        if (!type || fileAccaccept.indexOf(type) == -1) {
+          showNotify('您上传图片的类型不符合(.jpg|.jpeg|.gif|.png|.bmp)', 'danger', 1000);
+          return false;
+        }
+        formFile.append("uploadFile", $input.files[0]);
+      }
+
+      var data = formFile;
+      var l = $('body').lyearloading({
+        opacity: 0.2,
+        spinnerSize: 'nm'
+      });
+
+      $.ajax({
+        url: 'https://jielong.openk.cn/upload',
+        data: data,
+        type: "POST",
+        dataType: "json",
+        //上传文件无需缓存
+        cache: false,
+        //用于对data参数进行序列化处理 这里必须false
+        processData: false,
+        //必须
+        contentType: false,
+        success: function (res) {
+          l.destroy();
+          if (res.code === 20000) {
+            $this.closest('.file-group').find('.file-value').val(res.msg);
+          } else {
+            showNotify(res.msg, 'danger', 3000);
+          }
+        },
+      });
+    });
+  });
+</script>
+<script type="text/javascript">
+  $(function () {
+    $("#keepData").click(function () {
+
+      // let name = $("input[name='name']").val();
+      // let phone = $("input[name='phone']").val();
+      // let wechat = $("i6901028317122nput[name='wechat']").val();
+
+
+      $("#project_form").ajaxSubmit(function (result) {
+
+
+        // let res = JSON.parse(result);
+        //
+        if(result.code==0){
+           layer.msg("数据修改成功");
+        }else{
+
+          layer.msg("数据修改失败");
+
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

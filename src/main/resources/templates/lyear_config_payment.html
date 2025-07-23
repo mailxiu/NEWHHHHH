@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>网站配置 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link rel="stylesheet" type="text/css" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">支付配置</div></header>
+        <div class="card-body">
+          
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link active" id="basic-applet" data-bs-toggle="tab" data-bs-target="#applet" type="button" >微信JSAPI支付配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-weChatAppPay" data-bs-toggle="tab" data-bs-target="#weChatAppPay" type="button" >微信APP支付配置</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="basic-alipay" data-bs-toggle="tab" data-bs-target="#alipay" type="button">支付宝APP支付配置</button>
+            </li>
+          </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="applet" aria-labelledby="basic-applet">
+
+                <form action="/config/payment" id="payment_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label for="merchantId" class="form-label">商户号</label>
+                    <input class="form-control" type="text" id="merchantId" name="merchantId" th:value="${paymentConfig==null?'':paymentConfig.merchantId}" placeholder="请输入merchantId">
+                    <small class="form-text">源自：<code>微信商户平台：merchantId</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="merchantSerialNumber" class="form-label">证书号</label>
+                    <input class="form-control" type="text" id="merchantSerialNumber" name="merchantSerialNumber" th:value="${paymentConfig==null?'':paymentConfig.merchantSerialNumber}" placeholder="请输入merchantSerialNumber">
+                    <small class="form-text">源自：<code>微信商户平台：证书序列号merchantSerialNumber</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="apiV3Key" class="form-label">密钥</label>
+                    <input class="form-control" type="text" id="apiV3Key" name="apiV3Key" th:value="${paymentConfig==null?'':paymentConfig.apiV3Key}"  placeholder="请输入apiV3Key">
+                    <small class="form-text">源自：<code>微信商户平台：apiV3Key</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="privateKeyFromPath" class="form-label">证书路径</label>
+                    <input class="form-control" type="text" id="privateKeyFromPath" name="privateKeyFromPath" th:value="${paymentConfig==null?'':paymentConfig.privateKeyFromPath}" placeholder="请输入privateKeyFromPath">
+                    <small class="form-text">源自：<code>微信商户平台：证书自行上传至服务器,填写服务器文件路径/apiclient_key.pem</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="publicKeyFromPath" class="form-label">微信支付公钥的存放路径</label>
+                    <input class="form-control" type="text" id="publicKeyFromPath" name="publicKeyFromPath" th:value="${paymentConfig==null?'':paymentConfig.publicKeyFromPath}" placeholder="请输入publicKeyFromPath">
+                    <small class="form-text">源自：<code>微信商户平台：证书自行上传至服务器</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="publicKeyId" class="form-label">微信支付公钥ID</label>
+                    <input class="form-control" type="text" id="publicKeyId" name="publicKeyId" th:value="${paymentConfig==null?'':paymentConfig.publicKeyId}" placeholder="请输入publicKeyId">
+                    <small class="form-text">源自：<code>微信商户平台：publicKeyId</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="payment_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+              </form>
+              </div>
+
+              <div class="tab-pane fade" id="weChatAppPay" aria-labelledby="basic-weChatAppPay">
+
+                <form action="/config/weChatAppPay" id="weChatAppPay_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label for="merchantId1" class="form-label">商户号</label>
+                    <input class="form-control" type="text" id="merchantId1" name="merchantId" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.merchantId}" placeholder="请输入merchantId">
+                    <small class="form-text">源自：<code>微信商户平台：merchantId</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="merchantSerialNumber1" class="form-label">证书号</label>
+                    <input class="form-control" type="text" id="merchantSerialNumber1" name="merchantSerialNumber" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.merchantSerialNumber}" placeholder="请输入merchantSerialNumber">
+                    <small class="form-text">源自：<code>微信商户平台：证书序列号merchantSerialNumber</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="apiV3Key1" class="form-label">密钥</label>
+                    <input class="form-control" type="text" id="apiV3Key1" name="apiV3Key" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.apiV3Key}"  placeholder="请输入apiV3Key">
+                    <small class="form-text">源自：<code>微信商户平台：apiV3Key</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="privateKeyFromPath" class="form-label">证书路径</label>
+                    <input class="form-control" type="text" id="privateKeyFromPath1" name="privateKeyFromPath" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.privateKeyFromPath}" placeholder="请输入privateKeyFromPath">
+                    <small class="form-text">源自：<code>微信商户平台：证书自行上传至服务器,填写服务器文件路径/apiclient_key.pem</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="publicKeyFromPath1" class="form-label">微信支付公钥的存放路径</label>
+                    <input class="form-control" type="text" id="publicKeyFromPath1" name="publicKeyFromPath" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.publicKeyFromPath}" placeholder="请输入publicKeyFromPath">
+                    <small class="form-text">源自：<code>微信商户平台：证书自行上传至服务器</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="publicKeyId1" class="form-label">微信支付公钥ID</label>
+                    <input class="form-control" type="text" id="publicKeyId1" name="publicKeyId" th:value="${wechatAppPayConfig==null?'':wechatAppPayConfig.publicKeyId}" placeholder="请输入publicKeyId">
+                    <small class="form-text">源自：<code>微信商户平台：publicKeyId</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="weChatAppPay_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="tab-pane fade" id="alipay" aria-labelledby="basic-alipay">
+
+                <form action="/config/alipay" id="alipay_form" method="post" name="edit-form" class="edit-form" onsubmit="return false;">
+                  <div class="mb-3">
+                    <label for="appid" class="form-label">商户号</label>
+                    <input class="form-control" type="text" id="appid" name="appid" th:value="${payAlipayConfig==null?'':payAlipayConfig.appid}" placeholder="请输入appid">
+                    <small class="form-text">源自：<code>支付宝商户号：appid</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="privateKey" class="form-label">应用私钥</label>
+                    <input class="form-control" type="text" id="privateKey" name="privateKey" th:value="${payAlipayConfig==null?'':payAlipayConfig.privateKey}" placeholder="请输入privateKey">
+                    <small class="form-text">源自：<code>微信商户平台：证书序列号merchantSerialNumber</code></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="alipayPublicKey" class="form-label">支付宝公钥</label>
+                    <input class="form-control" type="text" id="alipayPublicKey" name="alipayPublicKey" th:value="${payAlipayConfig==null?'':payAlipayConfig.alipayPublicKey}"  placeholder="请输入alipayPublicKey">
+                    <small class="form-text">源自：<code>微信商户平台：apiV3Key</code></small>
+                  </div>
+
+                  <div>
+                    <button type="button" id="alipay_btn" class="btn btn-primary me-1">确 定</button>
+                  </div>
+                </form>
+
+              </div>
+
+            </div>
+
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--tags插件-->
+<script type="text/javascript" src="js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script>
+
+  //配置微信支付参数
+  $("#payment_btn").click(function () {
+
+    $("#payment_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("数据保存成功");
+      }else{
+        layer.msg("数据保存失败");
+      }
+    });
+  });
+
+  //配置微信APP支付参数
+  $("#weChatAppPay_btn").click(function () {
+
+    $("#weChatAppPay_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("数据保存成功");
+      }else{
+        layer.msg("数据保存失败");
+      }
+    });
+  });
+
+  //配置支付宝支付参数
+  $("#alipay_btn").click(function () {
+
+    $("#alipay_form").ajaxSubmit(function (result) {
+
+      if(result.code==20000){
+        layer.msg("数据保存成功");
+      }else{
+        layer.msg("数据保存失败");
+      }
+    });
+  });
+
+
+</script>
+</body>
+</html>

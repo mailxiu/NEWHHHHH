@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>海报设计 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="row">
+
+            <!-- 设计栏 -->
+            <div class="col-6 align-items-center" style="padding-top: 5px">
+
+              <div id="dragContainer" style="position:relative;margin: 0 auto;border:1px dashed blue;width:540px;height:960px;background-color: aliceblue;user-select: none;">
+                <img id="hb_image" style="width: 100%;height: 100%;position: absolute;left: 0;top: 0;z-index: 999;user-select: none;pointer-events: none;"/>
+                <div id="dragDiv" style="height:110px;width:110px;z-index: 10000;">
+                    <img id="qr_img" width="100%" height="100%"  th:src="${'/service/getUnlimitedQRCode?appid='+appletConfig.appId+'&uid=100000'}">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 属性栏 -->
+            <div class="col">
+              <form id="poster_form" action="/poster/add" method="post" class="row" onsubmit="return false;">
+                <input type="hidden" class="form-control"  name="appid" th:value="${appletConfig.appId}">
+                <div class="mb-3 col-md-12">
+                  <label for="img_size" class="form-label">图片尺寸</label>
+                  <div id="img_size" class="row">
+                    <div class="col">
+                      <input type="text" class="form-control"  name="img_w" value="1080" placeholder="图片w">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control"  name="img_h" value="1920" placeholder="图片h">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-md-12">
+                  <label for="canvas_size" class="form-label">画布尺寸</label>
+                  <div id="canvas_size" class="row">
+                    <div class="col">
+                      <input type="text" class="form-control"  name="canvas_w" value="540" placeholder="画布w">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control"  name="canvas_h" value="960" placeholder="画布h">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 file-group col-md-12">
+                  <label for="picture" class="form-label">项目图片</label>
+                  <div class="input-group" id="picture">
+                    <input id="bg_image" type="text" class="form-control file-value" name="main_image" value="" placeholder="请输入或上传海报背景图" />
+                    <input type="file" name="" accaccept=".png,.jpg,.jpeg,.bmp,.gif" class="d-none" />
+                    <div class="input-group-append">
+                      <button class="btn btn-default file-browser" type="button">上传图片</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-md-12">
+                  <label for="box_size" class="form-label">二维码尺寸</label>
+                  <div id="box_size" class="row">
+                    <div class="col">
+                      <input type="text" class="form-control"  name="qr_w" value="220" placeholder="二维码X">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control"  name="qr_h" value="220" placeholder="二维码Y">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-md-12">
+                  <label for="box_size" class="form-label">二维码位置</label>
+                  <div id="box_size1" class="row">
+                    <div class="col">
+                      <input type="text" class="form-control"  name="qr_x" value="110" placeholder="二维码X">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control"  name="qr_y" value="110" placeholder="二维码Y">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-md-12">
+
+                  <div class="row">
+
+                    <div class="col">
+                      <label for="qr_color" class="form-label">线条颜色</label>
+                      <input type="color" class="form-control" id="qr_color"  name="qr_color" value="0" placeholder="二维码X">
+                    </div>
+                    <div class="col">
+                      <label for="is_hyaline" class="form-label">背景是否透明</label>
+                      <input type="number" class="form-control" id="is_hyaline"  name="is_hyaline" value="0" placeholder="0=背景色,1=透明色">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-md-12">
+                  <label class="form-label">状态</label>
+                  <div class="clearfix">
+                    <div class="form-check form-check-inline">
+                      <input type="radio" id="statusOne" name="state" value="0" class="form-check-input">
+                      <label class="form-check-label" for="statusOne">隐藏</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input type="radio" id="statusTwo" name="state" value="1" class="form-check-input" checked="">
+                      <label class="form-check-label" for="statusTwo">启用</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3 col-md-12">
+                  <button type="submit" id="save" class="btn btn-primary ajax-post" target-form="add-form">保存</button>
+                  <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">返 回</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="/js/jquery.form.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(document).on('click', '.file-browser', function() {//点击上传图片
+
+      var $browser = $(this);
+      var file = $browser.closest('.file-group').find('[type="file"]');
+      file.on( 'click', function(e) {
+        e.stopPropagation();
+      });
+      file.trigger('click');
+    });
+
+    $(document).on('change', '.file-group [type="file"]', function() {
+      console.log('文件内容发生改变');
+      var $this    = $(this);
+      var $input   = $(this)[0];
+      var $len     = $input.files.length;
+      var formFile = new FormData();
+
+      if ($len == 0) {
+        return false;
+      } else {
+        var fileAccaccept = $this.attr('accaccept');
+        var fileType      = $input.files[0].type;
+        var type          = (fileType.substr(fileType.lastIndexOf("/") + 1)).toLowerCase();
+
+        if (!type || fileAccaccept.indexOf(type) == -1) {
+          showNotify('您上传图片的类型不符合(.jpg|.jpeg|.gif|.png|.bmp)', 'danger', 1000);
+          return false;
+        }
+        formFile.append("uploadFile", $input.files[0]);
+      }
+
+      var data = formFile;
+      var l = $('body').lyearloading({
+        opacity: 0.2,
+        spinnerSize: 'nm'
+      });
+
+      $.ajax({
+        url: '/upload_operate',
+        data: data,
+        type: "POST",
+        dataType: "json",
+        //上传文件无需缓存
+        cache: false,
+        //用于对data参数进行序列化处理 这里必须false
+        processData: false,
+        //必须
+        contentType: false,
+        success: function (res) {
+          l.destroy();
+          if (res.code === 20000) {
+            $this.closest('.file-group').find('.file-value').val(res.msg);
+            $("#hb_image").attr("src", res.msg);
+          } else {
+            showNotify(res.msg, 'danger', 3000);
+          }
+        },
+      });
+    });
+  });
+</script>
+<script type="text/javascript">
+  (function($)
+  {
+    $.extend({
+      mouseCoords:function(ev){
+        if(ev.pageX || ev.pageY){
+          return {x:ev.pageX, y:ev.pageY};
+        }
+        return {
+          x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+          y:ev.clientY + document.body.scrollTop  - document.body.clientTop
+        };
+      },
+      getStyle:function(obj,styleName){
+      	return obj.currentStyle ? obj.currentStyle[styleName] : document.defaultView.getComputedStyle(obj,null)[styleName];
+      }
+    });
+
+    $.fn.dragDrop = function(options){
+      var opts = $.extend({},$.fn.dragDrop.defaults,options);
+      return this.each(function(){
+        var bDraging = false;
+        var moveEle = $(this);
+        var focuEle = opts.focuEle ? $(opts.focuEle,moveEle) : moveEle ;
+        if(!focuEle || focuEle.length<=0){
+          alert('focuEle is not found! the element must be a child of '+this.id);
+          return false;
+        }
+        var dragParams = {initDiffX:'',initDiffY:'',moveX:'',moveY:''};
+        moveEle.css({'position':'absolute','left':'0','top':'0'});//设置二维码初始位置
+        focuEle.bind('mousedown',function(e){
+
+          bDraging = true;
+
+          moveEle.css({'cursor':'move'});
+          if(moveEle.get(0).setCapture){
+            moveEle.get(0).setCapture();
+          }
+          dragParams.initDiffX = $.mouseCoords(e).x - moveEle.position().left;
+          dragParams.initDiffY = $.mouseCoords(e).y - moveEle.position().top;
+        });
+        focuEle.bind('mousemove',function(e){
+          if(bDraging){
+            dragParams.moveX = $.mouseCoords(e).x - dragParams.initDiffX;
+            dragParams.moveY = $.mouseCoords(e).y - dragParams.initDiffY;
+            if(opts.fixarea){
+              if(dragParams.moveX<opts.fixarea[0]){
+                dragParams.moveX=opts.fixarea[0]
+              }
+              if(dragParams.moveX>opts.fixarea[1]){
+                dragParams.moveX=opts.fixarea[1]
+              }
+              if(dragParams.moveY<opts.fixarea[2]){
+                dragParams.moveY=opts.fixarea[2]
+              }
+              if(dragParams.moveY>opts.fixarea[3]){
+                dragParams.moveY=opts.fixarea[3]
+              }
+            }
+            if(opts.dragDirection=='all'){
+              moveEle.css({'left':dragParams.moveX,'top':dragParams.moveY});
+            }
+            else if (opts.dragDirection=='vertical'){
+              moveEle.css({'top':dragParams.moveY});
+            }
+            else if(opts.dragDirection=='horizontal'){
+              moveEle.css({'left':dragParams.moveX});
+            }
+            if(opts.callback){
+              opts.callback.call(opts.callback,dragParams);
+            }
+          }
+        });
+        focuEle.bind('mouseup',function(e){
+          bDraging=false;
+          moveEle.css({'cursor':'default'});
+          if(moveEle.get(0).releaseCapture)
+          {
+            moveEle.get(0).releaseCapture();
+          }
+        });
+      });
+    };
+    $.fn.dragDrop.defaults = {
+      focuEle:null,
+      callback:null,
+      dragDirection:'all',
+      fixarea:null
+    };
+  })(jQuery);
+
+  $(function(){
+
+    //新增海报
+    $("#save").click(function () {
+
+      $("#poster_form").ajaxSubmit(function (result) {
+
+        if(result.code==0){
+          layer.msg("海报创建成功");
+        }else{
+          layer.msg("海报创建失败");
+        }
+      });
+    });
+
+    let ws = $("input[name='img_w']").val()/$("input[name='canvas_w']").val();
+    let hs = $("input[name='img_h']").val()/$("input[name='canvas_h']").val();
+
+    $('#dragDiv').dragDrop({fixarea:[0,$('#dragContainer').width()-$("#dragDiv").width(),0,$('#dragContainer').height()-$("#dragDiv").height()],callback:function(params){
+        $("input[name='qr_x']").val(Math.round(params.moveX)*ws);
+        $("input[name='qr_y']").val(Math.round(params.moveY)*hs)
+      }});
+
+    $('#bg_image').on('input', function() {//监听背景图片发生变化
+      $("#hb_image").attr("src", $(this).val());
+    });
+
+    $("input[name='qr_color']").on('input', function() {//监听小程序码线条颜色发生变化
+
+      var index = layer.load(0, { shade:  [0.1, '#000'] });  // 0.1透明度的白色背景
+
+      let appid =  $("input[name='appid']").val();
+      let is_hyaline =  $("input[name='is_hyaline']").val();
+
+
+      const bigint = parseInt($(this).val().substring(1), 16);
+      const color_r = (bigint >> 16) & 255;
+      const color_g = (bigint >> 8) & 255;
+      const color_b = bigint & 255;
+
+
+      $("#qr_img").attr("src", '/service/getUnlimitedQRCode?appid='+appid+'&uid=100000&color_r='+color_r+'&color_g='+color_g+'&color_b='+color_b+'&is_hyaline='+is_hyaline);
+
+      $('#qr_img').on('load', function() {
+        // 图片加载完成后的操作
+        layer.close(index);
+      });
+    });
+
+    $("input[name='is_hyaline']").on('input', function() {//监听小程序码背景色变化
+
+      var index = layer.load(0, { shade:  [0.1, '#000'] });  // 0.1透明度的白色背景
+
+      let appid =  $("input[name='appid']").val();
+      let qr_color =  $("input[name='qr_color']").val();
+      const bigint = parseInt(qr_color.substring(1), 16);
+      const color_r = (bigint >> 16) & 255;
+      const color_g = (bigint >> 8) & 255;
+      const color_b = bigint & 255;
+
+      $("#qr_img").attr("src", '/service/getUnlimitedQRCode?appid='+appid+'&uid=100000&&color_r='+color_r+'&color_g='+color_g+'&color_b='+color_b+'&is_hyaline='+$(this).val());
+
+      $('#qr_img').on('load', function() {
+        // 图片加载完成后的操作
+        layer.close(index);
+      });
+    });
+
+    $("input[name='canvas_w']").on('input', function() {
+      $("#dragContainer").width($(this).val());
+      // 计算缩放系数
+      let ws = $("input[name='img_w']").val()/$("input[name='canvas_w']").val();
+      let hs = $("input[name='img_h']").val()/$("input[name='canvas_h']").val();
+
+      $('#dragDiv').dragDrop({fixarea:[0,$('#dragContainer').width()-$("#dragDiv").width(),0,$('#dragContainer').height()-$("#dragDiv").height()],callback:function(params){
+          $("input[name='qr_x']").val(Math.round(params.moveX)*ws);
+          $("input[name='qr_y']").val(Math.round(params.moveY)*hs)
+        }});
+    });
+
+    $("input[name='canvas_h']").on('input', function() {
+      $("#dragContainer").height($(this).val());
+      // 计算缩放系数
+      let ws = $("input[name='img_w']").val()/$("input[name='canvas_w']").val();
+      let hs = $("input[name='img_h']").val()/$("input[name='canvas_h']").val();
+
+      $('#dragDiv').dragDrop({fixarea:[0,$('#dragContainer').width()-$("#dragDiv").width(),0,$('#dragContainer').height()-$("#dragDiv").height()],callback:function(params){
+          $("input[name='qr_x']").val(Math.round(params.moveX)*ws);
+          $("input[name='qr_y']").val(Math.round(params.moveY)*hs)
+        }});
+    });
+
+    $("input[name='qr_w']").on('input', function() {
+
+      // 计算缩放系数
+      let ws = $("input[name='img_w']").val()/$("input[name='canvas_w']").val();
+      let hs = $("input[name='img_h']").val()/$("input[name='canvas_h']").val();
+
+      $("#dragDiv").width($(this).val()/ws);
+
+      $('#dragDiv').dragDrop({fixarea:[0,$('#dragContainer').width()-$("#dragDiv").width(),0,$('#dragContainer').height()-$("#dragDiv").height()],callback:function(params){
+          $("input[name='qr_x']").val(Math.round(params.moveX)*ws);
+          $("input[name='qr_y']").val(Math.round(params.moveY)*hs)
+        }});
+    });
+
+    $("input[name='qr_h']").on('input', function() {
+
+      // 计算缩放系数
+      let ws = $("input[name='img_w']").val()/$("input[name='canvas_w']").val();
+      let hs = $("input[name='img_h']").val()/$("input[name='canvas_h']").val();
+
+      $("#dragDiv").height($(this).val()/hs);
+
+      $('#dragDiv').dragDrop({fixarea:[0,$('#dragContainer').width()-$("#dragDiv").width(),0,$('#dragContainer').height()-$("#dragDiv").height()],callback:function(params){
+          $("input[name='qr_x']").val(Math.round(params.moveX)*ws);
+          $("input[name='qr_y']").val(Math.round(params.moveY)*hs)
+        }});
+
+    });
+  });
+
+</script>
+</body>
+</html>

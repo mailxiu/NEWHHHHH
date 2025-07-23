@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.CarouselMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Carousel">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="imageUri" column="image_uri" jdbcType="VARCHAR"/>
+            <result property="event" column="event" jdbcType="VARCHAR"/>
+            <result property="respond" column="respond" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,sort,
+        image_uri,event,respond,
+        state,create_time
+    </sql>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.ExceptionLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.ExceptionLog">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="exceptionName" column="exception_name" jdbcType="VARCHAR"/>
+            <result property="exceptionMessage" column="exception_message" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,exception_name,exception_message,
+        create_time
+    </sql>
+</mapper>

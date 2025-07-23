@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.PosterMapper">
+
+    <resultMap id="BaseResultMap" type="com.bss.entity.Poster">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="merchant" column="merchant" jdbcType="BIGINT"/>
+            <result property="mainImage" column="main_image" jdbcType="VARCHAR"/>
+            <result property="imgW" column="img_w" jdbcType="INTEGER"/>
+            <result property="imgH" column="img_h" jdbcType="INTEGER"/>
+            <result property="qrW" column="qr_w" jdbcType="INTEGER"/>
+            <result property="qrH" column="qr_h" jdbcType="INTEGER"/>
+            <result property="qrX" column="qr_x" jdbcType="INTEGER"/>
+            <result property="qrY" column="qr_y" jdbcType="INTEGER"/>
+            <result property="qrColor" column="qr_color" jdbcType="VARCHAR"/>
+            <result property="isHyaline" column="is_hyaline" jdbcType="TINYINT"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,merchant,main_image,
+        img_w,img_h,qr_w,
+        qr_h,qr_x,qr_y,
+        qr_color,is_hyaline,state,
+        create_time
+    </sql>
+</mapper>

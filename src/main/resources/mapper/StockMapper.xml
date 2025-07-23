@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.StockMapper">
+
+    <select id="selectPageVo" resultType="com.bss.entity.Stock" parameterType="java.util.Map">
+        select * from stock where id!=0
+        <if test="map.merchant!=''">
+            and merchant=#{map.merchant}
+        </if>
+        <if test="map.uid!=''">
+            and uid=#{map.uid}
+        </if>
+        <if test="map.bar_code!=''">
+            and code=#{map.bar_code}
+        </if>
+        <if test="map.state!=''">
+            and state=#{map.state}
+        </if>
+        order by create_time asc
+    </select>
+
+</mapper>

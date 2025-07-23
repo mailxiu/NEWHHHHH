@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bss.mapper.CountMapper">
+
+    <select id="getCount" resultType="com.bss.entity.RecordNum" parameterType="java.util.Map">
+        select *,count(*) as num ,MIN(update_time) AS  earliest_update_time from record where state ='审核中' and merchant=${merchant} and sale=${sale} GROUP BY code ORDER BY num DESC
+    </select>
+
+    <select id="getCountByUid" resultType="com.bss.entity.RecordCount" parameterType="java.util.Map">
+        select *,count(*) as count_all,count(case when state='已通过' then 1 end) as count_true,count(case when state='未通过' then 1 end) as count_false from record where merchant=${merchant} and uid=${uid} GROUP BY code ORDER BY count_all DESC
+    </select>
+
+    <select id="stockCount" resultType="com.bss.entity.StockNum" parameterType="java.util.Map">
+        select *,count(*) as num from stock where state ='已入库' and merchant=${merchant} GROUP BY code ORDER BY num DESC
+    </select>
+
+<!--    超管统计-->
+    <select id="superRecordCount" resultType="com.bss.entity.RecordNum" parameterType="java.util.List">
+        select *,count(*) as num from record where state ='审核中' and merchant in
+
+        <foreach  item="item" collection="list" index="index"  open="(" separator="," close=")">
+            #{item.merchant}
+        </foreach>
+
+        GROUP BY code ORDER BY create_time ASC
+    </select>
+
+    <!-- 查询最近七天的会员注册-->
+    <select id="getMemberCount" resultType="com.bss.entity.ChartCount" parameterType="java.util.Map">
+        SELECT DATE(member.create_time) AS timeData, COUNT(*) AS referData,COUNT(case when partner!=1 then 1 end) AS volumeData
+        FROM member
+        WHERE member.create_time >= CURDATE() - INTERVAL 7 DAY
+        AND merchant=${merchant}
+        GROUP BY timeData
+        ORDER BY timeData ASC;
+    </select>
+
+
+    <!-- 查询最近七天的回收统计-->
+    <select id="getRecordCount" resultType="com.bss.entity.ChartCount" parameterType="java.util.Map">
+        SELECT DATE(record.create_time) AS timeData, COUNT(*) AS referData,COUNT(case when state='已通过' then 1 end) AS volumeData
+        FROM record
+        WHERE record.create_time >= CURDATE() - INTERVAL 7 DAY
+          AND merchant=${merchant}
+        GROUP BY timeData
+        ORDER BY timeData ASC;
+    </select>
+
+</mapper>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>会员分析 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<!--tags插件css-->
+<link type="text/css" rel="stylesheet" href="js/jquery-tagsinput/jquery.tagsinput.min.css">
+<!--上传插件css-->
+<link type="text/css" rel="stylesheet" href="js/webuploader/webuploader.css">
+<!--灯箱效果插件css-->
+<link type="text/css" rel="stylesheet" href="js/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css" href="css/animate.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+
+  
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">
+          下级列表
+          <span class="text-primary" style="font-size: 12px" th:text="${'查询总数：'+list.size()}"></span>
+        </div></header>
+        <div class="card-body">
+
+          <div class="card-search mb-2-5">
+            <form id="search_form" class="search-form" method="post" action="/member_spread" role="form">
+              <div class="row">
+                <input type="hidden" name="uid" th:value="${member.uid}">
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 会员等级</label>
+                    <div class="col-sm-8">
+                      <select name="partner" class="form-select">
+                        <option value="">全部等级</option>
+                        <option  th:each="item,index : ${gradeList}" th:value="${item.sort}"  th:text="${item.name}" th:selected="${item.sort} eq ${session.details_partner}">小说</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="row">
+                    <label class="col-sm-4 col-form-label"><span class="text-danger">*</span> 推荐关系</label>
+                    <div class="col-sm-8">
+                      <select name="relation" class="form-select">
+                        <option th:selected="${session.details_relation eq 'direct'}" value="direct">直接推荐</option>
+                        <option th:selected="${session.details_relation eq 'indirect'}" value="indirect">间接推荐</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <button type="submit" class="btn btn-primary me-1">搜索</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>推荐关系</th>
+                <th>ID</th>
+                <th>名称</th>
+                <th>头像</th>
+                <th>openid</th>
+                <th>绑定手机</th>
+                <th>积分</th>
+                <th>会员等级</th>
+                <th>状态</th>
+                <th>创建时间</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="item,customerStat : ${list}">
+                <td>
+                  <span th:if="${session.details_relation eq 'direct'}">直接推荐</span>
+                  <span th:if="${session.details_relation eq 'indirect'}">间接推荐</span>
+                </td>
+                <td th:text="${item.uid}">用户UID</td>
+                <td th:text="${item.name}">用户名称</td>
+                <td>
+                  <img width="30px" th:src="${item.portrait}" class="rounded" th:alt="${item.name}">
+                </td>
+                <td th:text="${item.openid}">微信标识</td>
+                <td th:text="${item.phone}">绑定手机</td>
+                <td th:text="${item.points}">用户积分</td>
+                <td th:text="${'Lv_'+item.partner}"></td>
+                <td th:text="${item.state}">状态</td>
+                <td th:text="${#dates.format(item.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+              </tr>
+              <tfoot th:if="${list.size()==0}">
+              <tr>
+                <td class="text-center" colspan="16">
+                  <div style="display: flex;flex-direction: column;align-items: center;padding-bottom: 20px;">
+                    <img width="240px" src="images/empty.png">
+                    <span style="color: #8f8f8f">数据为空</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+
+
+</body>
+</html>

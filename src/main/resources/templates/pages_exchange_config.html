@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>提现配置 - 光年(Light Year Admin V5)后台管理系统模板</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">提现配置</div></header>
+        <div class="card-body">
+
+          <form id="update_form" action="/config/updatePay" method="post" class="row" onsubmit="return false;">
+            <div class="mb-3 col-md-12">
+              <label for="payMode" class="form-label">收取方式</label>
+              <div class="form-controls">
+                <select name="payMode" class="form-select" id="payMode">
+                  <option th:selected="${configure==null?false:configure.payMode==0}" value="0">提现不收费</option>
+                  <option th:selected="${configure==null?false:configure.payMode==1}" value="1">按次数收取</option>
+                  <option th:selected="${configure==null?false:configure.payMode==2}" value="2">按比例收取</option>
+                </select>
+              </div>
+              <small class="form-text">温馨提示,”按次数收取” 是无论金额大小都是固定收，”按比例收取“ 是提现金额*百分比计算</small>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="payPoints" class="form-label">固定费</label>
+              <input type="number" class="form-control" id="payPoints" name="payPoints" th:value="${configure==null?'':configure.payPoints}" placeholder="请输入数据" />
+              <small class="form-text">提现单笔固定手续费,举例：填写0.5 = 每笔提现扣除0.5元手续费,以此类推</small>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="payPercent" class="form-label">百分比</label>
+              <input type="number" class="form-control" id="payPercent" name="payPercent" th:value="${configure==null?'':configure.payPercent}" placeholder="请输入数据" />
+              <small class="form-text">提现单笔百分比比例,举例：填写0.01 = 每笔提现扣除1%手续费,以此类推</small>
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="payStart" class="form-label">提现门槛</label>
+              <input type="number" class="form-control" id="payStart" name="payStart" th:value="${configure==null?'':configure.payStart}" placeholder="请输入提现门槛单位/元" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="automaticPayment" class="form-label">支付宝自动打款限额</label>
+              <input type="number" class="form-control" id="automaticPayment" name="automaticPayment" th:value="${configure==null?'':configure.automaticPayment}" placeholder="请输入支付宝自动打款限额" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="withdrawalNumber" class="form-label">每日提现次数</label>
+              <input type="number" class="form-control" id="withdrawalNumber" name="withdrawalNumber" th:value="${configure==null?'':configure.withdrawalNumber}" placeholder="请输入每日提现次数" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="payChannelName" class="form-label">提现渠道名称</label>
+              <input type="text" class="form-control" id="payChannelName" name="payChannelName" th:value="${configure==null?'':configure.payChannelName}" placeholder="请输入提现渠道名称" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <label for="payChannelImage" class="form-label">提现渠道图标</label>
+              <input type="text" class="form-control" id="payChannelImage" name="payChannelImage" th:value="${configure==null?'':configure.payChannelImage}" placeholder="请输入提现渠道图标" />
+            </div>
+            <div class="mb-3 col-md-12">
+              <button id="update_btn" type="button" class="btn btn-primary ajax-post" target-form="add-form">确 定</button>
+              <button type="reset" class="btn btn-default">清空</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--表单处理插件-->
+<script type="text/javascript" src="js/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/lyear-loading.js"></script>
+<script type="text/javascript" src="js/main.min.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script>
+  $(function () {
+    $("#update_btn").click(function () {
+
+      $("#update_form").ajaxSubmit(function (result) {
+
+        if(result.code==0){
+          layer.msg("修改成功");
+        }else{
+          layer.msg("修改失败");
+        }
+      });
+    });
+  });
+
+
+</script>
+</body>
+</html>
