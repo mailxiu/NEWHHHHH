@@ -899,155 +899,117 @@ import static com.bss.utils.R.success;
 /*      */ 
 /*      */   
 /*      */   @PostMapping({"/effective"})
-/*      */   public R effective(@RequestParam("idList") List<Long> idList, HttpSession session) {
-/*  894 */     User user = (User)session.getAttribute("user");
-/*      */     
-/*  896 */     if (idList.size() == 0) {
-/*  897 */       return success(Boolean.valueOf(false)).setMsg("未选中数据").setCode(101L);
-/*      */     }
-/*      */ 
-/*      */     
-/*  901 */     List<Record> list = this.recordService.listByIds(idList);
-/*      */ 
-/*      */ 
-/*      */     
-/*  905 */     Map<String, String> notes_map = new HashMap<>();
-/*      */ 
-/*      */     
-/*  908 */     Map<String, List<Record>> groupedByUid = (Map<String, List<Record>>)list.stream().collect(Collectors.groupingBy(Record::getUid));
-/*      */ 
-/*      */     
-/*  911 */     groupedByUid.forEach((uid, items) -> {
-/*      */           System.out.println("用户" + uid + ":");
-/*      */ 
-/*      */           
-/*      */           List<Record> items1 = items;
-/*      */ 
-/*      */           
-/*      */           Map<String, List<Record>> groupedByCode = (Map<String, List<Record>>)items1.stream().distinct().collect(Collectors.groupingBy(Record::getCode));
-/*      */ 
-/*      */           
-/*      */           System.out.println("录入了：" + groupedByCode.size() + "个品类");
-/*      */ 
-/*      */           
-/*      */           StringBuilder sb = new StringBuilder();
-/*      */ 
-/*      */           
-/*      */           //groupedByCode.forEach(());
-/*      */           
-/*      */           notes_map.put(uid, sb.substring(0, sb.length() - 1));
-/*      */         });
-/*      */     
-/*  932 */     ListIterator<Record> iterator = list.listIterator();
-/*      */     
-/*  934 */     Lock look = new ReentrantLock();
-/*      */     
-/*  936 */     ConcurrentHashMap<String, BigDecimal> map_body = new ConcurrentHashMap<>();
-/*  937 */     ConcurrentHashMap<String, Record> map_record = new ConcurrentHashMap<>();
-/*      */     
-/*  939 */     int total = list.size() / 20;
-/*      */     
-/*  941 */     if (total < 1) {
-/*  942 */       total = 1;
-/*      */     }
-/*      */     
-/*  945 */     CountDownLatch countDownLatch = new CountDownLatch(total);
-/*      */     
-/*  947 */     synchronized (iterator) {
-/*      */       
-/*  949 */       for (int i = 0; i < total; i++) {
-/*      */         
-/*  951 */         (new Thread(() -> {
-/*      */               while (iterator.hasNext()) {
-/*      */                 Record record = iterator.next();
-/*      */                 
-/*      */                 record.setState("已通过");
-/*      */                 
-/*      */                 this.recordService.saveOrUpdate(record);
-/*      */                 
-/*      */                 look.lock();
-/*      */                 
-/*      */                 if (map_body.containsKey(record.getUid())) {
-/*      */                   BigDecimal value = (BigDecimal)map_body.get(record.getUid());
-/*      */                   
-/*      */                   BigDecimal sum = value.add(new BigDecimal(record.getPoints().toString()));
-/*      */                   
-/*      */                   map_body.put(record.getUid(), sum);
-/*      */                 } else {
-/*      */                   map_body.put(record.getUid(), new BigDecimal(record.getPoints().toString()));
-/*      */                   
-/*      */                   map_record.put(record.getUid(), record);
-/*      */                 } 
-/*      */                 
-/*      */                 look.unlock();
-/*      */               } 
-/*      */               countDownLatch.countDown();
-/*  976 */             },String.valueOf(i))).start();
-/*      */       } 
-/*      */     } 
-/*      */ 
-/*      */     
-/*      */     try {
-/*  982 */       countDownLatch.await();
-/*  983 */     } catch (InterruptedException e) {
-/*  984 */       e.printStackTrace();
-/*      */     } 
-/*      */     
-/*  987 */     for (Map.Entry<String, BigDecimal> entry : map_body.entrySet()) {
-/*      */       
-/*  989 */       Member member = (Member)this.memberService.getOne((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).eq("uid", entry.getKey()));
-/*      */       
-/*  991 */       if (member != null) {
-/*      */         
-/*  993 */         double sum = ((BigDecimal)entry.getValue()).doubleValue() + member.getPoints().doubleValue();
-/*      */         
-/*  995 */         log.info("用户UID：{}，当前积分：{}", member.getUid(), Double.valueOf(sum));
-/*      */         
-/*  997 */         member.setPoints(Double.valueOf(sum));
-/*      */         
-/*  999 */         this.memberService.saveOrUpdate(member);
-/*      */         
-/* 1001 */         Settlement settlement = new Settlement();
-/* 1002 */         settlement.setId(Integer.valueOf(0));
-/* 1003 */         settlement.setUid(member.getUid());
-/* 1004 */         settlement.setType("回收结算");
-/* 1005 */         settlement.setNotes("卖出：" + (String)notes_map.get(member.getUid()));
-/* 1006 */         settlement.setTotal(Double.valueOf(((BigDecimal)entry.getValue()).doubleValue()));
-/*      */         
-/* 1008 */         this.settlementService.save(settlement);
-/*      */         
-/* 1010 */         Member t_member = (Member)this.memberService.getOne((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).eq("uid", member.getMid()));
-/*      */         
-/* 1012 */         if (t_member != null) {
-/*      */           
-/* 1014 */           Grade t_grade = (Grade)this.gradeService.getOne((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("sort", t_member.getPartner())).eq("merchant", user.getMerchant()));
-/*      */           
-/* 1016 */           BigDecimal rebate = ((BigDecimal)entry.getValue()).multiply(new BigDecimal(t_grade.getPresent().toString()));
-/*      */           
-/* 1018 */           if (rebate.doubleValue() >= 0.01D) {
-/*      */             
-/* 1020 */             t_member.setPoints(Double.valueOf(t_member.getPoints().doubleValue() + rebate.doubleValue()));
-/*      */             
-/* 1022 */             Settlement t_settlement = new Settlement();
-/* 1023 */             t_settlement.setId(Integer.valueOf(0));
-/* 1024 */             t_settlement.setSid(member.getUid());
-/* 1025 */             t_settlement.setUid(t_member.getUid());
-/* 1026 */             t_settlement.setType("卖货提成");
-/* 1027 */             t_settlement.setNotes("源自:下级" + member.getUid() + "卖出:" + (String)notes_map.get(member.getUid()));
-/* 1028 */             t_settlement.setTotal(Double.valueOf(rebate.doubleValue()));
-/*      */             
-/* 1030 */             this.settlementService.save(t_settlement);
-/*      */             
-/* 1032 */             this.memberService.saveOrUpdate(t_member);
-/*      */           } 
-/*      */         } 
-/*      */       } 
-/*      */     } 
-/*      */ 
-/*      */     
-/* 1039 */     return success(Boolean.valueOf(true));
-/*      */   }
-/*      */ 
+public R effective(@RequestParam List<Long> idList, HttpSession session) {
+    User user = (User)session.getAttribute("user");
+    if (idList.size() == 0) {
+        return success(Boolean.valueOf(false)).setMsg("未选中数据").setCode(101L);
+    }
+    List<Record> list = this.recordService.listByIds(idList);
+
+    Map<String, List<Record>> groupedByUid = list.stream().collect(Collectors.groupingBy(Record::getUid));
+
+    ListIterator<Record> iterator = list.listIterator();
+    Lock look = new ReentrantLock();
+    ConcurrentHashMap<String, BigDecimal> map_body = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, Record> map_record = new ConcurrentHashMap<>();
+
+    int total = list.size() / 20;
+    if (total < 1) {
+        total = 1;
+    }
+    CountDownLatch countDownLatch = new CountDownLatch(total);
+
+    synchronized (iterator) {
+        for (int i = 0; i < total; i++) {
+            (new Thread(() -> {
+                while (iterator.hasNext()) {
+                    Record record = iterator.next();
+                    record.setState("已通过");
+                    this.recordService.saveOrUpdate(record);
+                    look.lock();
+                    if (map_body.containsKey(record.getUid())) {
+                        BigDecimal value = map_body.get(record.getUid());
+                        BigDecimal sum = value.add(new BigDecimal(record.getPoints().toString()));
+                        map_body.put(record.getUid(), sum);
+                    } else {
+                        map_body.put(record.getUid(), new BigDecimal(record.getPoints().toString()));
+                        map_record.put(record.getUid(), record);
+                    }
+                    look.unlock();
+                }
+                countDownLatch.countDown();
+            }, String.valueOf(i))).start();
+        }
+    }
+
+    try {
+        countDownLatch.await();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    for (Map.Entry<String, BigDecimal> entry : map_body.entrySet()) {
+        Member member = (Member)this.memberService.getOne(
+                (Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).eq("uid", entry.getKey()));
+        if (member != null) {
+            double sum = entry.getValue().doubleValue() + member.getPoints().doubleValue();
+            log.info("用户UID：{}，当前积分：{}", member.getUid(), Double.valueOf(sum));
+            member.setPoints(Double.valueOf(sum));
+            this.memberService.saveOrUpdate(member);
+
+            // 获取该用户本次批量通过的所有 Record
+            List<Record> userRecords = list.stream()
+                    .filter(r -> r.getUid().equals(member.getUid()))
+                    .collect(Collectors.toList());
+
+            // 按商品 code 分组
+            Map<String, List<Record>> codeMap = userRecords.stream()
+                    .collect(Collectors.groupingBy(Record::getCode));
+
+            // 针对每个商品，生成一条结算
+            for (List<Record> codeRecords : codeMap.values()) {
+                Record record = codeRecords.get(0); // 任意一条，拿商品名和单价
+                Settlement settlement = new Settlement();
+                settlement.setId(0);
+                settlement.setUid(member.getUid());
+                settlement.setType("回收结算");
+                settlement.setNotes("卖出:【" + record.getName() + "】，单价:" + record.getPoints() + "元");
+                settlement.setTotal(codeRecords.stream().mapToDouble(r -> r.getPoints()).sum());
+                this.settlementService.save(settlement);
+            }
+
+            // 卖货提成
+            Member t_member = (Member)this.memberService.getOne(
+                    (Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).eq("uid", member.getMid()));
+            if (t_member != null) {
+                Grade t_grade = (Grade)this.gradeService.getOne(
+                        (Wrapper)((QueryWrapper)(new QueryWrapper()).eq("sort", t_member.getPartner())).eq("merchant", user.getMerchant()));
+                // 针对每个商品，生成一条卖货提成结算
+                for (List<Record> codeRecords : codeMap.values()) {
+                    Record record = codeRecords.get(0);
+                    BigDecimal rebate = new BigDecimal(record.getPoints().toString())
+                            .multiply(new BigDecimal(t_grade.getPresent().toString()));
+                    if (rebate.doubleValue() >= 0.01D) {
+                        t_member.setPoints(t_member.getPoints() + rebate.doubleValue());
+                        Settlement t_settlement = new Settlement();
+                        t_settlement.setId(0);
+                        t_settlement.setSid(member.getUid());
+                        t_settlement.setUid(t_member.getUid());
+                        t_settlement.setType("卖货提成");
+                        t_settlement.setNotes("源自:下级" + member.getUid() + "卖出:【" + record.getName() + "】");
+                        t_settlement.setTotal(rebate.doubleValue());
+                        this.settlementService.save(t_settlement);
+                        this.memberService.saveOrUpdate(t_member);
+                    }
+                }
+            }
+        }
+    }
+
+    return success(Boolean.valueOf(true));
+}
+
+    /*      */
 /*      */ 
 /*      */ 
 /*      */ 

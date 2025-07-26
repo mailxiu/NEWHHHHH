@@ -1,112 +1,255 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
-<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
-<title>首页 - 光年(Light Year Admin V4)后台管理系统模板</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-touch-fullscreen" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="stylesheet" type="text/css" href="css/materialdesignicons.min.css">
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="css/style.min.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+	<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+	<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+	<title>首页 - 光年(Light Year Admin V4)后台管理系统模板</title>
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<!-- 引入Material Design Icons确保图标显示 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-icons@3.0.1/iconfont/material-icons.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.min.css">
+
+	<style>
+		.stat-card {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1rem;
+			border-radius: 8px;
+			color: #fff;
+			height: 110px;
+			box-sizing: border-box;
+		}
+
+		.stat-icon {
+			width: 52px;
+			height: 52px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.5rem;
+			margin-right: 1rem;
+			flex-shrink: 0;
+		}
+
+		.stat-info {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.stat-title {
+			font-size: 1.15rem;
+			font-weight: 600;
+			margin-bottom: 0.25rem;
+		}
+
+		/* 单行数据样式 - 与标题字体大小完全一致 */
+		.single-value {
+			font-size: 1.15rem;
+			font-weight: 600;
+		}
+
+		/* 双行数据容器 */
+		.double-values {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+		}
+
+		.today {
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
+		.yesterday {
+			font-size: 0.875rem;
+			opacity: 0.7;
+			margin-top: 6px; /* 增加今日与昨日数据间距 */
+		}
+	</style>
 </head>
-  
+
 <body>
 <div class="container-fluid">
 
-  <div class="row">
+	<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
 
-    <div class="col-md-6 col-xl-3">
-      <div class="card bg-primary text-white">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <span class="avatar-md rounded-circle bg-white bg-opacity-25 avatar-box">
-              <i class="mdi mdi-currency-cny fs-4"></i>
-            </span>
-            <span class="fs-4" th:text="${records_count}">102,125.00</span>
-          </div>
-          <div class="text-end">今日收码</div>
-        </div>
-      </div>
-    </div>
+		<!-- 收码卡片（修复图标） -->
+		<div class="col">
+			<div class="stat-card bg-primary">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">camera_alt</i> <!-- 使用相机图标作为扫码替代，兼容性更好 -->
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">扫码</div>
+					</div>
+				</div>
+				<div class="double-values">
+					<div class="today">今日 <span th:text="${records_count + '个'}">未知</span></div>
+					<div class="yesterday">昨日 <span th:text="${records_count_yesterday + '个'}">未知</span></div>
+				</div>
+			</div>
+		</div>
 
-  	<div class="col-md-6 col-xl-3">
-  	  <div class="card bg-danger text-white">
-  	    <div class="card-body">
-  	      <div class="d-flex justify-content-between">
-  	        <span class="avatar-md rounded-circle bg-white bg-opacity-25 avatar-box">
-              <i class="mdi mdi-account fs-4"></i>
-            </span>
-  	        <span class="fs-4" th:text="${members_count}">920,000</span>
-  	      </div>
-  	      <div class="text-end">用户总数</div>
-  	    </div>
-  	  </div>
-  	</div>
+		<!-- 今日卖出卡片 -->
+		<div class="col">
+			<div class="stat-card" style="background-color: #7B1FA2;">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">shopping_cart</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">卖出</div>
+					</div>
+				</div>
+				<div class="double-values">
+					<div class="today">今日 <span th:text="${today_sell_count + '个'}">未知</span></div>
+					<div class="yesterday">昨日 <span th:text="${yesterday_sell_count + '个'}">未知</span></div>
+				</div>
+			</div>
+		</div>
 
-  	<div class="col-md-6 col-xl-3">
-  	  <div class="card bg-success text-white">
-  	    <div class="card-body">
-  	      <div class="d-flex justify-content-between">
-  	        <span class="avatar-md rounded-circle bg-white bg-opacity-25 avatar-box">
-              <i class="mdi mdi-arrow-down-bold fs-4"></i>
-            </span>
-  	        <span class="fs-4" th:text="${increase_count}">34,005,000</span>
-  	      </div>
-  	      <div class="text-end">新增用户</div>
-  	    </div>
-  	  </div>
-  	</div>
+		<!-- 新增用户卡片 -->
+		<div class="col">
+			<div class="stat-card bg-success">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">arrow_downward</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">新增用户</div>
+					</div>
+				</div>
+				<div class="double-values">
+					<div class="today">今日 <span th:text="${increase_count}">未知</span></div>
+					<div class="yesterday">昨日 <span th:text="${increase_count_yesterday}">未知</span></div>
+				</div>
+			</div>
+		</div>
 
-  	<div class="col-md-6 col-xl-3">
-  	  <div class="card bg-purple text-white">
-  	    <div class="card-body">
-  	      <div class="d-flex justify-content-between">
-  	        <span class="avatar-md rounded-circle bg-white bg-opacity-25 avatar-box">
-              <i class="mdi mdi-currency-cny fs-4"></i>
-            </span>
-  	        <span class="fs-4" th:text="${withdrawals_count+'条'}">153 条</span>
-  	      </div>
-  	      <div class="text-end">等待提现</div>
-  	    </div>
-  	  </div>
-  	</div>
+		<!-- 用户总数卡片 -->
+		<div class="col">
+			<div class="stat-card bg-info">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">people</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">用户总数</div>
+					</div>
+				</div>
+				<div class="single-value">
+					<span th:text="${members_count}">未知</span>
+				</div>
+			</div>
+		</div>
 
-  </div>
+		<!-- 今日会员卡片 -->
+		<div class="col">
+			<div class="stat-card bg-success">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">attach_money</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">收款</div>
+					</div>
+				</div>
+				<div class="double-values">
+					<div class="today">今日 <span th:text="${today_member_amount + '元'}">0 元</span></div>
+					<div class="yesterday">昨日 <span th:text="${yesterday_member_amount + '元'}">0 元</span></div>
+				</div>
+			</div>
+		</div>
 
-  <div class="row">
+		<!-- 今日结算卡片 -->
+		<div class="col">
+			<div class="stat-card bg-warning">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">account_balance_wallet</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">货款结算</div>
+					</div>
+				</div>
+				<div class="double-values">
+					<div class="today">今日 <span th:text="${today_settlement_amount + '元'}">0 元</span></div>
+					<div class="yesterday">昨日 <span th:text="${yesterday_settlement_amount + '元'}">0 元</span></div>
+				</div>
+			</div>
+		</div>
 
-  	<div class="col-md-6">
-  	  <div class="card">
-  	    <div class="card-header">
-  	      <div class="card-title">最近七日会员趋势</div>
-  	    </div>
-  	    <div class="card-body">
-  	      <canvas class="js-chartjs-bars"></canvas>
-  	    </div>
-  	  </div>
-  	</div>
+		<!-- 等待提现卡片 -->
+		<div class="col">
+			<div class="stat-card bg-purple">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">monetization_on</i>
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">等待提现</div>
+					</div>
+				</div>
+				<div class="single-value">
+					<span th:text="${withdrawals_count + '条'}">未知</span>
+				</div>
+			</div>
+		</div>
 
-  	<div class="col-md-6">
-  	  <div class="card">
-  	    <div class="card-header">
-          <div class="card-title">最近七日回收趋势</div>
-  	    </div>
-  	    <div class="card-body">
-  	      <canvas class="js-chartjs-lines"></canvas>
-  	    </div>
-  	  </div>
-  	</div>
+		<!-- 未提现卡片（修复图标） -->
+		<div class="col">
+			<div class="stat-card bg-danger">
+				<div class="d-flex align-items-center">
+					<div class="stat-icon bg-white bg-opacity-25">
+						<i class="material-icons text-white">credit_card</i> <!-- 使用信用卡图标作为未提现替代，兼容性更好 -->
+					</div>
+					<div class="stat-info">
+						<div class="stat-title">未提现余额</div>
+					</div>
+				</div>
+				<div class="single-value">
+					<span th:text="${total_unwithdrawn + '元'}">未知</span>
+				</div>
+			</div>
+		</div>
 
-  </div>
+	</div>
 
-	<div class="row">
+	<div class="row mt-4">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-title">最近七日会员趋势</div>
+				</div>
+				<div class="card-body">
+					<canvas class="js-chartjs-bars"></canvas>
+				</div>
+			</div>
+		</div>
 
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-title">最近七日回收趋势</div>
+				</div>
+				<div class="card-body">
+					<canvas class="js-chartjs-lines"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row mt-4">
 		<div class="col-lg-12">
 			<div class="card">
 				<header class="card-header">
@@ -124,7 +267,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 </div>
@@ -133,66 +275,65 @@
 <script type="text/javascript" src="js/popper.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/chart.min.js"></script>
-<!--引入chart插件js-->
 <script type="text/javascript" src="js/main.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
-$(document).ready(function(e) {
-	var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),
-		$dashChartLinesCnt = jQuery('.js-chartjs-lines')[0].getContext('2d');
+	$(document).ready(function(e) {
+		var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),
+				$dashChartLinesCnt = jQuery('.js-chartjs-lines')[0].getContext('2d');
 
-	var $dashChartBarsData = {
-		labels: [[${memberCount_date}]],
-		datasets: [{
-			label: '注册用户',
-			borderWidth: 1,
-			borderColor: 'rgba(0, 0, 0, 0)',
-			backgroundColor: 'rgba(0, 123, 255,0.5)',
-			hoverBackgroundColor: "rgba(0, 123, 255, 0.7)",
-			hoverBorderColor: "rgba(0, 0, 0, 0)",
-			data: [[${memberCount_refer}]]
-		},
-			{
-				label: '有效用户',
+		var $dashChartBarsData = {
+			labels: [[${memberCount_date}]],
+			datasets: [{
+				label: '注册用户',
 				borderWidth: 1,
 				borderColor: 'rgba(0, 0, 0, 0)',
-				backgroundColor: 'rgb(21,195,119)',
-				hoverBackgroundColor: "rgb(21,195,119)",
+				backgroundColor: 'rgba(0, 123, 255,0.5)',
+				hoverBackgroundColor: "rgba(0, 123, 255, 0.7)",
 				hoverBorderColor: "rgba(0, 0, 0, 0)",
-				data: [[${memberCount_volume}]]
-			}
-		]
-	};
-	var $dashChartLinesData = {
-		labels: [[${recordCount_date}]],
-		datasets: [{
-			label: '录入总数',
-			data: [[${recordCount_refer}]],
-			borderColor: '#007bff',
-			backgroundColor: 'rgba(0, 123, 255, 0.175)',
-			borderWidth: 1,
-			fill: false,
-			lineTension: 0.5
-		},{
-			label: '有效录入',
-			data: [[${recordCount_volume}]],
-			borderColor: '#0c8b0e',
-			backgroundColor: 'rgba(0, 123, 255, 0.175)',
-			borderWidth: 1,
-			fill: false,
-			lineTension: 0.5
-		}]
-	};
+				data: [[${memberCount_refer}]]
+			},
+				{
+					label: '有效用户',
+					borderWidth: 1,
+					borderColor: 'rgba(0, 0, 0, 0)',
+					backgroundColor: 'rgb(21,195,119)',
+					hoverBackgroundColor: "rgb(21,195,119)",
+					hoverBorderColor: "rgba(0, 0, 0, 0)",
+					data: [[${memberCount_volume}]]
+				}
+			]
+		};
+		var $dashChartLinesData = {
+			labels: [[${recordCount_date}]],
+			datasets: [{
+				label: '录入总数',
+				data: [[${recordCount_refer}]],
+				borderColor: '#007bff',
+				backgroundColor: 'rgba(0, 123, 255, 0.175)',
+				borderWidth: 1,
+				fill: false,
+				lineTension: 0.5
+			},{
+				label: '有效录入',
+				data: [[${recordCount_volume}]],
+				borderColor: '#0c8b0e',
+				backgroundColor: 'rgba(0, 123, 255, 0.175)',
+				borderWidth: 1,
+				fill: false,
+				lineTension: 0.5
+			}]
+		};
 
-	new Chart($dashChartBarsCnt, {
-		type: 'bar',
-		data: $dashChartBarsData
-	});
+		new Chart($dashChartBarsCnt, {
+			type: 'bar',
+			data: $dashChartBarsData
+		});
 
-	var myLineChart = new Chart($dashChartLinesCnt, {
-		type: 'line',
-		data: $dashChartLinesData,
+		var myLineChart = new Chart($dashChartLinesCnt, {
+			type: 'line',
+			data: $dashChartLinesData,
+		});
 	});
-});
 </script>
 <script>
 	var xhr = new XMLHttpRequest();

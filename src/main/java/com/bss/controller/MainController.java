@@ -50,6 +50,9 @@ import com.alibaba.fastjson.JSONArray;
 /*      */ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 /*      */ import com.bss.enmus.PaymentEnum;
 import com.bss.entity.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 /*      */
 /*      */
 /*      */
@@ -353,69 +356,174 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */   
-/*      */   @RequestMapping({"/main"})
-/*      */   public String main(Model model, HttpSession session) {
-/*  302 */     User user = (User)session.getAttribute("user");
-/*      */     
-/*  304 */     int records_count = this.recordService.count((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).apply(true, "TO_DAYS(NOW())-TO_DAYS(create_time) = 0", new Object[0]));
-/*      */     
-/*  306 */     int increase_count = this.memberService.count((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).apply(true, "TO_DAYS(NOW())-TO_DAYS(create_time) = 0", new Object[0]));
-/*      */     
-/*  308 */     int members_count = this.memberService.count((Wrapper)(new QueryWrapper()).eq("merchant", user.getMerchant()));
-/*      */     
-/*  310 */     int withdrawals_count = this.withdrawalService.count((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", user.getMerchant())).eq("state", "待处理"));
-/*      */ 
-/*      */     
-/*  313 */     Map<String, Object> map = new HashMap<>();
-/*      */     
-/*  315 */     map.put("merchant", user.getMerchant());
-/*  316 */     List<ChartCount> memberCount = this.countService.getMemberCount(map);
-/*      */     
-/*  318 */     List<ChartCount> recordCount = this.countService.getRecordCount(map);
-/*      */ 
-/*      */ 
-/*      */ 
-/*      */     
-/*  323 */     List<String> memberCount_date = (List<String>)memberCount.stream().map(ChartCount::getTimeData).collect(Collectors.toList());
-/*      */ 
-/*      */ 
-/*      */     
-/*  327 */     List<String> memberCount_refer = (List<String>)memberCount.stream().map(ChartCount::getReferData).collect(Collectors.toList());
-/*      */ 
-/*      */ 
-/*      */     
-/*  331 */     List<String> memberCount_volume = (List<String>)memberCount.stream().map(ChartCount::getVolumeData).collect(Collectors.toList());
-/*      */ 
-/*      */ 
-/*      */     
-/*  335 */     List<String> recordCount_date = (List<String>)recordCount.stream().map(ChartCount::getTimeData).collect(Collectors.toList());
-/*      */ 
-/*      */ 
-/*      */     
-/*  339 */     List<String> recordCount_refer = (List<String>)recordCount.stream().map(ChartCount::getReferData).collect(Collectors.toList());
-/*      */ 
-/*      */ 
-/*      */     
-/*  343 */     List<String> recordCount_volume = (List<String>)recordCount.stream().map(ChartCount::getVolumeData).collect(Collectors.toList());
-/*      */ 
-/*      */     
-/*  346 */     model.addAttribute("memberCount_date", memberCount_date);
-/*  347 */     model.addAttribute("recordCount_date", recordCount_date);
-/*      */     
-/*  349 */     model.addAttribute("memberCount_refer", memberCount_refer);
-/*  350 */     model.addAttribute("recordCount_refer", recordCount_refer);
-/*      */     
-/*  352 */     model.addAttribute("memberCount_volume", memberCount_volume);
-/*  353 */     model.addAttribute("recordCount_volume", recordCount_volume);
-/*      */ 
-/*      */     
-/*  356 */     model.addAttribute("records_count", Integer.valueOf(records_count));
-/*  357 */     model.addAttribute("members_count", Integer.valueOf(members_count));
-/*  358 */     model.addAttribute("increase_count", Integer.valueOf(increase_count));
-/*  359 */     model.addAttribute("withdrawals_count", Integer.valueOf(withdrawals_count));
-/*      */     
-/*  361 */     return "lyear_main";
-/*      */   }
+/*      */
+
+    @RequestMapping({"/main"})
+    public String main(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String merchant = user.getMerchant();
+
+        // 日期区间
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+
+        String todayStart = today.toString() + " 00:00:00";
+        String todayEnd = today.toString() + " 23:59:59";
+        String yesterdayStart = yesterday.toString() + " 00:00:00";
+        String yesterdayEnd = yesterday.toString() + " 23:59:59";
+
+        // 今日收码
+        int records_count = this.recordService.count(
+                new QueryWrapper<Record>()
+                        .eq("merchant", merchant)
+                        .between("create_time", todayStart, todayEnd)
+        );
+        // 昨日收码
+        int records_count_yesterday = this.recordService.count(
+                new QueryWrapper<Record>()
+                        .eq("merchant", merchant)
+                        .between("create_time", yesterdayStart, yesterdayEnd)
+        );
+
+        // 今日新增用户
+        int increase_count = this.memberService.count(
+                new QueryWrapper<Member>()
+                        .eq("merchant", merchant)
+                        .between("create_time", todayStart, todayEnd)
+        );
+        // 昨日新增用户
+        int increase_count_yesterday = this.memberService.count(
+                new QueryWrapper<Member>()
+                        .eq("merchant", merchant)
+                        .between("create_time", yesterdayStart, yesterdayEnd)
+        );
+
+        // 用户总数
+        int members_count = this.memberService.count(
+                new QueryWrapper<Member>().eq("merchant", merchant)
+        );
+
+        // 等待提现
+        int withdrawals_count = this.withdrawalService.count(
+                new QueryWrapper<Withdrawal>()
+                        .eq("merchant", merchant)
+                        .eq("state", "待处理")
+        );
+
+        // 今日卖出
+        int today_sell_count = this.recordService.count(
+                new QueryWrapper<Record>()
+                        .eq("merchant", merchant)
+                        .eq("sale", 1)
+                        .between("update_time", todayStart, todayEnd)
+        );
+        // 昨日卖出
+        int yesterday_sell_count = this.recordService.count(
+                new QueryWrapper<Record>()
+                        .eq("merchant", merchant)
+                        .eq("sale", 1)
+                        .between("update_time", yesterdayStart, yesterdayEnd)
+        );
+
+        // 今日/昨日会员金额（优化版，只查orders表）
+        Double today_member_amount = 0.0;
+        Double yesterday_member_amount = 0.0;
+
+// 查询今日会员金额
+        Map<String, Object> orderMapToday = this.orderService.getMap(
+                new QueryWrapper<Order>()
+                        .eq("state", "已支付")
+                        .between("create_time", todayStart, todayEnd)
+                        .select("IFNULL(sum(money),0) as money")
+        );
+        if (orderMapToday.get("money") != null) {
+            today_member_amount = Double.parseDouble(orderMapToday.get("money").toString());
+        }
+
+// 查询昨日会员金额
+        Map<String, Object> orderMapYesterday = this.orderService.getMap(
+                new QueryWrapper<Order>()
+                        .eq("state", "已支付")
+                        .between("create_time", yesterdayStart, yesterdayEnd)
+                        .select("IFNULL(sum(money),0) as money")
+        );
+        if (orderMapYesterday.get("money") != null) {
+            yesterday_member_amount = Double.parseDouble(orderMapYesterday.get("money").toString());
+        }
+
+        // 今日/昨日结算
+        Double today_settlement_amount = 0.0;
+        Double yesterday_settlement_amount = 0.0;
+        Map<String, Object> settlementMapToday = this.settlementService.getMap(
+                new QueryWrapper<Settlement>()
+                        .eq("type", "回收结算")
+                        .between("create_time", todayStart, todayEnd)
+                        .select("IFNULL(sum(total),0) as total")
+        );
+        Map<String, Object> settlementMapYesterday = this.settlementService.getMap(
+                new QueryWrapper<Settlement>()
+                        .eq("type", "回收结算")
+                        .between("create_time", yesterdayStart, yesterdayEnd)
+                        .select("IFNULL(sum(total),0) as total")
+        );
+        if (settlementMapToday.get("total") != null) {
+            today_settlement_amount = Double.parseDouble(settlementMapToday.get("total").toString());
+        }
+        if (settlementMapYesterday.get("total") != null) {
+            yesterday_settlement_amount = Double.parseDouble(settlementMapYesterday.get("total").toString());
+        }
+
+        // 未提现
+        Double total_unwithdrawn = 0.0;
+        Map<String, Object> unwithdrawnMap = this.memberService.getMap(
+                new QueryWrapper<Member>()
+                        .eq("merchant", merchant)
+                        .select("IFNULL(sum(points),0) as points")
+        );
+        if (unwithdrawnMap.get("points") != null) {
+            total_unwithdrawn = Double.parseDouble(unwithdrawnMap.get("points").toString());
+        }
+
+        // 统计图相关数据
+        Map<String, Object> map = new HashMap<>();
+        map.put("merchant", merchant);
+        List<ChartCount> memberCount = this.countService.getMemberCount(map);
+        List<ChartCount> recordCount = this.countService.getRecordCount(map);
+
+        List<String> memberCount_date = memberCount.stream().map(ChartCount::getTimeData).collect(Collectors.toList());
+        List<String> memberCount_refer = memberCount.stream().map(ChartCount::getReferData).collect(Collectors.toList());
+        List<String> memberCount_volume = memberCount.stream().map(ChartCount::getVolumeData).collect(Collectors.toList());
+        List<String> recordCount_date = recordCount.stream().map(ChartCount::getTimeData).collect(Collectors.toList());
+        List<String> recordCount_refer = recordCount.stream().map(ChartCount::getReferData).collect(Collectors.toList());
+        List<String> recordCount_volume = recordCount.stream().map(ChartCount::getVolumeData).collect(Collectors.toList());
+
+        // 传递图表数据
+        model.addAttribute("memberCount_date", memberCount_date);
+        model.addAttribute("recordCount_date", recordCount_date);
+        model.addAttribute("memberCount_refer", memberCount_refer);
+        model.addAttribute("recordCount_refer", recordCount_refer);
+        model.addAttribute("memberCount_volume", memberCount_volume);
+        model.addAttribute("recordCount_volume", recordCount_volume);
+
+        // 传递今日数据
+        model.addAttribute("records_count", records_count);
+        model.addAttribute("increase_count", increase_count);
+        model.addAttribute("members_count", members_count);
+        model.addAttribute("withdrawals_count", withdrawals_count);
+        model.addAttribute("today_sell_count", today_sell_count);
+        model.addAttribute("today_member_amount", today_member_amount);
+        model.addAttribute("today_settlement_amount", today_settlement_amount);
+        model.addAttribute("total_unwithdrawn", total_unwithdrawn);
+
+        // 传递昨日数据
+        model.addAttribute("records_count_yesterday", records_count_yesterday);
+        model.addAttribute("increase_count_yesterday", increase_count_yesterday);
+        model.addAttribute("yesterday_sell_count", yesterday_sell_count);
+        model.addAttribute("yesterday_member_amount", yesterday_member_amount);
+        model.addAttribute("yesterday_settlement_amount", yesterday_settlement_amount);
+
+        return "lyear_main";
+    }
 /*      */ 
 /*      */ 
 /*      */ 
