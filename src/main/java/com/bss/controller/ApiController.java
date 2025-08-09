@@ -456,7 +456,7 @@ import org.springframework.web.client.RestTemplate;
 /*  443 */       session.setAttribute("total", total);
 /*      */     } 
 /*      */     
-/*  446 */     if (total.intValue() >= 10) {
+/*  446 */     if (total.intValue() >= 15) {
 /*  447 */       return R.fail("今日接收验证码次数已耗尽");
 /*      */     }
 /*      */     
