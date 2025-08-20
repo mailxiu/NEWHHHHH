@@ -10,7 +10,8 @@
 /*    */ import javax.annotation.Resource;
 /*    */ import javax.servlet.http.HttpSession;
 /*    */ import org.apache.shiro.authz.annotation.RequiresPermissions;
-/*    */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*    */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*    */ import org.springframework.web.bind.annotation.PostMapping;
 /*    */ import org.springframework.web.bind.annotation.RequestMapping;
 /*    */ import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +37,7 @@
 /*    */   @Resource
 /*    */   private DividendService dividendService;
 /*    */   
-/*    */   @RequiresPermissions({"等级编辑"})
+/*    */   @RequiresRoles("Admin")
 /*    */   @PostMapping({"/update"})
 /*    */   public R update(DividendVO dividendVO, HttpSession session) {
 /* 42 */     Dividend dividend = new Dividend();
@@ -78,7 +79,7 @@
 /*    */ 
 /*    */ 
 /*    */ 
-/*    */   
+/*    */   @RequiresRoles("Admin")
 /*    */   @DeleteMapping({"del"})
 /*    */   public R delete(@RequestParam("id") Integer id) {
 /* 84 */     return success(Boolean.valueOf(this.dividendService.removeById(id)));

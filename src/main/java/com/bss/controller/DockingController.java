@@ -13,7 +13,8 @@
 /*     */ import java.util.List;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.slf4j.Logger;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.RequestMapping;
 /*     */ import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @RequestMapping({"/category"})
 /*     */   public R docking_category(HttpSession session) {
 /*  49 */     User user = (User)session.getAttribute("user");
@@ -72,7 +73,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @RequestMapping({"/project"})
 /*     */   public R docking_project(HttpSession session) {
 /*  78 */     User user = (User)session.getAttribute("user");
@@ -121,7 +122,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @RequestMapping({"/grade"})
 /*     */   public R docking_grade(HttpSession session) {
 /* 127 */     User user = (User)session.getAttribute("user");

@@ -15,7 +15,8 @@
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
 /*     */ import org.apache.shiro.authz.annotation.RequiresPermissions;
-/*     */ import org.slf4j.Logger;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +75,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping
 /*     */   public R insert(@RequestBody Grade grade) {
 /*  80 */     return success(Boolean.valueOf(this.gradeService.save(grade)));
@@ -87,7 +88,7 @@
 /*     */ 
 /*     */ 
 /*     */   
-/*     */   @RequiresPermissions({"等级编辑"})
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update"})
 /*     */   public R update(GradeVo gradeVo, HttpSession session) {
 /*  93 */     User user = (User)session.getAttribute("user");
@@ -132,7 +133,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/updateState"})
 /*     */   public R updateState(@RequestParam("idList") List<Long> idList, Integer state, HttpSession session) {
 /* 138 */     User user = (User)session.getAttribute("user");
@@ -163,7 +164,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(@RequestParam("id") Integer id) {
 /* 169 */     return success(Boolean.valueOf(this.gradeService.removeById(id)));

@@ -12,7 +12,8 @@
 /*     */ import java.util.Calendar;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.apache.shiro.crypto.hash.Md5Hash;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.crypto.hash.Md5Hash;
 /*     */ import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.ModelAttribute;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -81,7 +82,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update_freeze"})
 /*     */   public R update_freeze(Integer id, Integer state) {
 /*  87 */     User user = (User)this.userService.getById(id);
@@ -134,7 +135,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(@RequestParam("id") Integer id) {
 /* 140 */     return success(Boolean.valueOf(this.userService.removeById(id)));

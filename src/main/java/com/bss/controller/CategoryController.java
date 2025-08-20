@@ -12,7 +12,8 @@
 /*     */ import java.util.List;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.slf4j.Logger;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
@@ -78,7 +79,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/add"})
 /*     */   public R add(CategoryVo categoryVo, HttpSession session) {
 /*  84 */     User user = (User)session.getAttribute("user");
@@ -119,7 +120,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update_state"})
 /*     */   public R update_state(@RequestParam("idList") List<Long> idList, String state) {
 /* 125 */     Integer u_state = Integer.valueOf(1);
@@ -172,7 +173,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(@RequestParam("id") Integer id, HttpSession session) {
 /* 178 */     User user = (User)session.getAttribute("user");

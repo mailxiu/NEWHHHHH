@@ -24,6 +24,7 @@
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
 /*     */ import com.bss.service.impl.RecordServiceImpl;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.*;
@@ -282,7 +283,7 @@ import org.slf4j.Logger;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update"})
 /*     */   public R update(ProjectVo projectVo, HttpSession session) {
 /* 286 */     Project project = (Project)this.projectService.getById(projectVo.getId());
@@ -312,7 +313,7 @@ import org.slf4j.Logger;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Project project) {
 /* 316 */     return success(Boolean.valueOf(this.projectService.updateById(project)));
@@ -324,7 +325,7 @@ import org.slf4j.Logger;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/state_all"})
 /*     */   public R state_all(@RequestParam("idList") List<Long> idList, String state) {
 /* 328 */     System.out.println(idList.size());
@@ -369,7 +370,7 @@ import org.slf4j.Logger;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 373 */     if (idList.size() >= 5) {
@@ -379,7 +380,7 @@ import org.slf4j.Logger;
 /* 377 */     return success(Boolean.valueOf(this.projectService.removeByIds(idList)));
 /*     */   }
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/delOne"})
 /*     */   public R delOne(@RequestParam("id") Integer id) {
 /* 383 */     return success(Boolean.valueOf(this.projectService.removeById(id)));

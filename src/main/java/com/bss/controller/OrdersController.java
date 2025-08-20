@@ -9,7 +9,8 @@
 /*    */ import com.bss.service.impl.WxtPayServiceImpl;
 /*    */ import com.bss.utils.R;
 /*    */ import javax.annotation.Resource;
-/*    */ import org.springframework.web.bind.annotation.PostMapping;
+/*    */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.PostMapping;
 /*    */ import org.springframework.web.bind.annotation.RequestMapping;
 /*    */ import org.springframework.web.bind.annotation.RestController;
 /*    */ 
@@ -34,7 +35,8 @@
 /*    */   private WxtPayServiceImpl wxtPayService;
 /*    */   @Resource
 /*    */   private AlipayServiceImpl alipayService;
-/*    */   
+/*    */
+           @RequiresRoles("Admin")
 /*    */   @PostMapping({"refund"})
 /*    */   public R selectAll(String oid) {
 /* 40 */     Order order = (Order)this.orderService.getOne((Wrapper)(new QueryWrapper()).eq("oid", oid));

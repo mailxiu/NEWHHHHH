@@ -28,7 +28,8 @@
 /*     */ import java.util.Random;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
 /*     */ import org.springframework.web.bind.annotation.PathVariable;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -444,7 +445,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Withdrawal withdrawal) {
 /* 450 */     return success(Boolean.valueOf(this.withdrawalService.updateById(withdrawal)));
@@ -455,7 +456,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/rebut"})
 /*     */   public R rebut(String oid, String info, HttpSession session) {
 /* 461 */     User user = (User)session.getAttribute("user");
@@ -513,7 +514,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/pass"})
 /*     */   public R rebut(String oid, HttpSession session) {
 /* 519 */     User user = (User)session.getAttribute("user");
@@ -545,7 +546,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/state_all"})
 /*     */   public R state_all(@RequestParam("idList") List<Long> idList, String state, String notes) {
 /* 551 */     String n_state = "";
@@ -596,7 +597,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 602 */     return success(Boolean.valueOf(this.withdrawalService.removeByIds(idList)));

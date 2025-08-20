@@ -14,7 +14,8 @@
 /*     */ import java.util.List;
 /*     */ import java.util.Map;
 /*     */ import javax.annotation.Resource;
-/*     */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
 /*     */ import org.springframework.web.bind.annotation.PathVariable;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -146,7 +147,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Settlement settlement) {
 /* 152 */     return success(Boolean.valueOf(this.settlementService.updateById(settlement)));
@@ -157,7 +158,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 163 */     return success(Boolean.valueOf(this.settlementService.removeByIds(idList)));

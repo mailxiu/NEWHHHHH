@@ -24,7 +24,8 @@
 /*     */ import java.util.List;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.slf4j.Logger;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
@@ -81,7 +82,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update_all"})
 /*     */   public R update_all(@ModelAttribute MemberVO2 memberVO2) {
 /*  87 */     Member member = (Member)this.memberService.getById(memberVO2.getId());
@@ -364,7 +365,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update_freeze"})
 /*     */   public R update_freeze(Integer uid, String state) {
 /* 370 */     Member member = (Member)this.memberService.getOne((Wrapper)(new QueryWrapper()).eq("uid", uid));
@@ -384,7 +385,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update_partner"})
 /*     */   public R update_partner(Integer uid, Integer partner, HttpSession session) {
 /* 390 */     User user = (User)session.getAttribute("user");
@@ -421,7 +422,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/task_partner"})
 /*     */   public R task_partner(Integer uid, Integer partner, Double bonus, HttpSession session) {
 /* 427 */     User user = (User)session.getAttribute("user");
@@ -477,7 +478,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 483 */     return success(Boolean.valueOf(this.memberService.removeByIds(idList)));

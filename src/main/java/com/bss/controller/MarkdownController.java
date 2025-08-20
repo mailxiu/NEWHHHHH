@@ -17,7 +17,8 @@
 /*     */ import java.util.List;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
 /*     */ import org.springframework.web.bind.annotation.PathVariable;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -158,7 +159,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/update"})
 /*     */   public R update(MarkdownVo markdownVo, HttpSession session) {
 /* 164 */     Calendar cal = Calendar.getInstance();
@@ -188,7 +189,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/updateState"})
 /*     */   public R updateState(@RequestParam("idList") List<Long> idList, Integer state) {
 /* 194 */     for (int i = 0; i < idList.size(); i++) {
@@ -209,7 +210,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(Integer id) {
 /* 215 */     boolean remove = this.markdownService.removeById(id);
@@ -222,7 +223,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 228 */     return success(Boolean.valueOf(this.markdownService.removeByIds(idList)));

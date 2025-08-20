@@ -12,7 +12,8 @@
 /*     */ import java.io.Serializable;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
 /*     */ import org.springframework.web.bind.annotation.PathVariable;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -80,7 +81,8 @@
 /*     */     
 /*  81 */     return success(Boolean.valueOf(save));
 /*     */   }
-/*     */   
+
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/state"})
 /*     */   public R insert(Integer id, Integer state) {
 /*  86 */     Poster poster = (Poster)this.posterService.getById(id);
@@ -94,7 +96,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Poster poster) {
 /* 100 */     return success(Boolean.valueOf(this.posterService.updateById(poster)));
@@ -105,7 +107,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("id") Integer id) {
 /* 111 */     return success(Boolean.valueOf(this.posterService.removeById(id)));

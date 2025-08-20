@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.bss.service.ProjectService;
 import com.bss.service.impl.*;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import org.slf4j.Logger;
@@ -590,7 +591,7 @@ public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/updateState"})
 /*      */   public R updateState(String oid, String state) {
 /*  554 */     Record record = (Record)this.recordService.getOne((Wrapper)(new QueryWrapper()).eq("oid", oid));
@@ -665,7 +666,7 @@ public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PutMapping
 /*      */   public R update(@RequestBody Record record) {
 /*  629 */     return success(Boolean.valueOf(this.recordService.updateById(record)));
@@ -679,7 +680,7 @@ public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PostMapping({"/stock_all"})
 /*      */   public R stock_all(@RequestParam("idList") List<Long> idList, HttpSession session) {
 /*  643 */     User user = (User)session.getAttribute("user");
@@ -736,7 +737,7 @@ public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/export"})
 /*      */   public void createTxt(String bar_code, @RequestParam(required = false, defaultValue = "") String uid, @RequestParam(required = false, defaultValue = "1") Integer total, @RequestParam(required = false, defaultValue = "desc") String sort, HttpServletResponse response, HttpSession session) throws Exception {
 /*  700 */     Calendar cal = Calendar.getInstance();
@@ -930,7 +931,7 @@ public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PostMapping({"/effective"})
 public R effective(@RequestParam List<Long> idList, HttpSession session) {
     User user = (User)session.getAttribute("user");
@@ -1049,7 +1050,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PostMapping({"/invalid"})
 /*      */   public R invalid(@RequestParam("idList") List<Long> idList, HttpSession session) {
 /* 1051 */     User user = (User)session.getAttribute("user");
@@ -1079,7 +1080,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PostMapping({"/import_code"})
 /*      */   public R import_code(String bar_code, Integer total, Integer state, @RequestParam("codeList") List<String> codeList, HttpSession session) {
 /* 1081 */     log.info("code：{},total：{}，size：{}，state：{}", new Object[] { bar_code, total, Integer.valueOf(codeList.size()), state });
@@ -1255,7 +1256,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @PostMapping({"/verify"})
 /*      */   public R verify(String barCode, Double passRate, Long base, HttpSession session) {
 /* 1257 */     long startTime = System.nanoTime();
@@ -1476,7 +1477,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @DeleteMapping({"/del"})
 /*      */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 1478 */     if (idList.size() == 0) {

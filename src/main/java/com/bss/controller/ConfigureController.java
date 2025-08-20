@@ -89,6 +89,7 @@ public class ConfigureController extends ApiController {
         return success(Boolean.valueOf(this.configureService.updateById(configure)));
     }
 
+    @RequiresRoles("Admin")
     @DeleteMapping
     public R delete(@RequestParam("idList") List<Long> idList) {
         return success(Boolean.valueOf(this.configureService.removeByIds(idList)));

@@ -30,7 +30,8 @@ import com.bss.entity.Category;
 /*      */ import java.util.stream.Collectors;
 /*      */ import javax.annotation.Resource;
 /*      */ import javax.servlet.http.HttpSession;
-/*      */ import org.apache.shiro.subject.Subject;
+/*      */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 /*      */ import org.springframework.ui.Model;
 /*      */ import org.springframework.web.bind.annotation.ModelAttribute;
 /*      */ import org.springframework.web.bind.annotation.RequestMapping;
@@ -1195,7 +1196,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/user_list"})
 /*      */   public String user_list(Model model, @RequestParam(required = false, defaultValue = "1") int pageIndex, @RequestParam(required = false, defaultValue = "") String uid, @RequestParam(required = false, defaultValue = "") String partner, @RequestParam(required = false, defaultValue = "refresh") String action, HttpSession session) {
 /* 1037 */     if (action.equals("refresh")) {
@@ -1230,7 +1231,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/role_list"})
 /*      */   public String role_list(Model model, HttpSession session) {
 /* 1072 */     User user = (User)session.getAttribute("user");
@@ -1249,7 +1250,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/permission_list"})
 /*      */   public String permission_list(Model model, HttpSession session) {
 /* 1091 */     User user = (User)session.getAttribute("user");
@@ -1621,7 +1622,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/dividend_update"})
 /*      */   public String dividend_update(Model model, @RequestParam(required = false, defaultValue = "0") Integer id) {
 /* 1463 */     Dividend dividend = new Dividend();
@@ -1644,7 +1645,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/dividend_list"})
 /*      */   public String dividend_list(Model model, HttpSession session) {
 /* 1486 */     List<Dividend> list = this.dividendService.list((Wrapper)new QueryWrapper());
@@ -1655,7 +1656,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/notice_add"})
 /*      */   public String notice_add(Model model, HttpSession session) {
 /* 1497 */     User user = (User)session.getAttribute("user");
@@ -1680,7 +1681,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/markdown_add"})
 /*      */   public String markdown_add(Model model) {
 /* 1522 */     model.addAttribute("albumEnum", AlbumEnum.values());
@@ -1689,7 +1690,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/markdown_update"})
 /*      */   public String markdown_update(Integer id, Model model) {
 /* 1531 */     Markdown markdown = (Markdown)this.markdownService.getById(id);
@@ -1703,7 +1704,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/markdown_details"})
 /*      */   public String markdown_details(Integer id, Model model) {
 /* 1545 */     Markdown markdown = (Markdown)this.markdownService.getById(id);
@@ -1716,7 +1717,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/markdown_list"})
 /*      */   public String markdown_list(Model model, @ModelAttribute PageModel pageModel) {
 /* 1558 */     Page<Markdown> iPage = (Page<Markdown>)this.markdownService.page((IPage)new Page(pageModel.getPageIndex().intValue(), pageModel.getSize().intValue()), (Wrapper)(new QueryWrapper()).orderByDesc("sort"));
@@ -1731,7 +1732,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/carousel_list"})
 /*      */   public String carousel_list(Model model, @ModelAttribute PageModel pageModel, HttpSession session) {
 /* 1573 */     User user = (User)session.getAttribute("user");
@@ -1747,7 +1748,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/advertise_edit"})
 /*      */   public String advertise_edit(Model model, HttpSession session) {
 /* 1589 */     User user = (User)session.getAttribute("user");
@@ -1765,7 +1766,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/screen_edit"})
 /*      */   public String screen_edit(Model model, HttpSession session) {
 /* 1607 */     User user = (User)session.getAttribute("user");
@@ -1781,7 +1782,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/poster_list"})
 /*      */   public String poster_list(Model model, @ModelAttribute PageModel pageModel, HttpSession session) {
 /* 1623 */     User user = (User)session.getAttribute("user");
@@ -1806,7 +1807,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/poster_design"})
 /*      */   public String poster_design(Model model) {
 /* 1648 */     AppletConfig appletConfig = (AppletConfig)this.appletConfigService.getOne((Wrapper)new QueryWrapper());
@@ -1849,7 +1850,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/pages_config"})
 /*      */   public String pages_config(Model model, HttpSession session) {
 /* 1691 */     Configure configure = (Configure)this.configureService.getOne((Wrapper)new QueryWrapper());
@@ -1884,7 +1885,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/application_config"})
 /*      */   public String application_config(Model model) {
 /* 1726 */     AppletConfig applet = (AppletConfig)this.appletConfigService.getOne((Wrapper)new QueryWrapper());
@@ -1903,7 +1904,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/payment_config"})
 /*      */   public String payment_config(Model model, HttpSession session) {
 /* 1745 */     PaymentConfig paymentConfig = (PaymentConfig)this.paymentConfigService.getOne((Wrapper)new QueryWrapper());
@@ -1936,7 +1937,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/record_import"})
 /*      */   public String record_import(Model model, HttpSession session) {
 /* 1778 */     User user = (User)session.getAttribute("user");
@@ -1955,7 +1956,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping({"/stock_export"})
 /*      */   public String stock_export(Model model, HttpSession session) {
 /* 1797 */     User user = (User)session.getAttribute("user");
@@ -1979,7 +1980,7 @@ import org.springframework.ui.Model;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @RequestMapping(value = {"/export_excel"}, method = {RequestMethod.GET})
 /*      */   public void export_excel(HttpServletResponse response, HttpServletRequest request, HttpSession session) throws Exception {
 /* 1821 */     User user = (User)session.getAttribute("user");
@@ -2014,7 +2015,7 @@ import org.springframework.ui.Model;
 /*      */   }
 /*      */ 
 /*      */ 
-/*      */   
+/*      */   @RequiresRoles("Admin")
 /*      */   @ResponseBody
 /*      */   @RequestMapping({"/test_export"})
 /*      */   public String test_export(Model model, HttpSession session) {

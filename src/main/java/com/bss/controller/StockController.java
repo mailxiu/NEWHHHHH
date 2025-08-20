@@ -261,7 +261,7 @@ import org.slf4j.Logger;
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   @RequiresRoles("Admin")
+/*     */
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Stock stock) {
 /* 265 */     return success(Boolean.valueOf(this.stockService.updateById(stock)));

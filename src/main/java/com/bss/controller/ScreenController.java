@@ -14,7 +14,8 @@
 /*     */ import java.util.List;
 /*     */ import javax.annotation.Resource;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.springframework.web.bind.annotation.DeleteMapping;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.web.bind.annotation.DeleteMapping;
 /*     */ import org.springframework.web.bind.annotation.GetMapping;
 /*     */ import org.springframework.web.bind.annotation.PathVariable;
 /*     */ import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@
 /*  56 */     return success(this.screenService.getById(id));
 /*     */   }
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/add"})
 /*     */   public R insert(ScreenVo screenVo, HttpSession session) {
 /*  62 */     User user = (User)session.getAttribute("user");
@@ -89,7 +90,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Screen screen) {
 /*  95 */     return success(Boolean.valueOf(this.screenService.updateById(screen)));
@@ -100,7 +101,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 106 */     return success(Boolean.valueOf(this.screenService.removeByIds(idList)));
