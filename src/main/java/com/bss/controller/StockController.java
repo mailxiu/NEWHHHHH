@@ -24,7 +24,8 @@
 /*     */ import javax.servlet.ServletOutputStream;
 /*     */ import javax.servlet.http.HttpServletResponse;
 /*     */ import javax.servlet.http.HttpSession;
-/*     */ import org.slf4j.Logger;
+/*     */ import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
 /*     */ import org.springframework.web.bind.annotation.*;
 /*     */
@@ -88,7 +89,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/export_one"})
 /*     */   public R export_one(String oid) {
 /*  93 */     Stock stock = (Stock)this.stockService.getOne((Wrapper)(new QueryWrapper()).eq("oid", oid));
@@ -107,7 +108,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/empty"})
 /*     */   public R empty(HttpSession session) {
 /* 112 */     User user = (User)session.getAttribute("user");
@@ -126,15 +127,15 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PostMapping({"/delete_one"})
 /*     */   public R delete_one(String oid) {
 /* 131 */     return success(Boolean.valueOf(this.stockService.remove((Wrapper)(new QueryWrapper()).eq("oid", oid))));
 /*     */   }
 /*     */ 
 /*     */ 
-/*     */ 
-/*     */   
+/*     */
+/*     */   @RequiresRoles("Admin")
 /*     */   @RequestMapping({"/export"})
 /*     */   public void createTxt(String bar_code, Integer total, HttpServletResponse response, HttpSession session) throws Exception {
 /* 139 */     Calendar cal = Calendar.getInstance();
@@ -260,7 +261,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @PutMapping
 /*     */   public R update(@RequestBody Stock stock) {
 /* 265 */     return success(Boolean.valueOf(this.stockService.updateById(stock)));
@@ -272,7 +273,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/*     */   
+/*     */   @RequiresRoles("Admin")
 /*     */   @DeleteMapping({"/del"})
 /*     */   public R delete(@RequestParam("idList") List<Long> idList) {
 /* 277 */     if (idList.size() >= 10) {

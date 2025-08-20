@@ -12,6 +12,7 @@ import com.bss.entity.PaymentConfig;
 import com.bss.entity.PresetConfig;
 import com.bss.entity.SystemConfig;
 import com.bss.entity.User;
+import org.apache.shiro.authz.annotation.RequiresRoles; // 记得引入Shiro注解
 import com.bss.entity.WechatAppPayConfig;
 import com.bss.service.impl.AppletConfigServiceImpl;
 import com.bss.service.impl.ArticleConfigServiceImpl;
@@ -59,6 +60,7 @@ public class ConfigController {
     @Resource
     private WechatAppPayConfigServiceImpl wechatAppPayConfigService;
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/payment"})
     public R payment(String merchantId, String merchantSerialNumber, String apiV3Key, String privateKeyFromPath, String publicKeyFromPath, String publicKeyId) {
         PaymentConfig payment = (PaymentConfig) this.paymentConfigService.getOne(new QueryWrapper<>());
@@ -78,6 +80,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/weChatAppPay"})
     public R weChatAppPay(String merchantId, String merchantSerialNumber, String apiV3Key, String privateKeyFromPath, String publicKeyFromPath, String publicKeyId) {
         WechatAppPayConfig payment = (WechatAppPayConfig) this.wechatAppPayConfigService.getOne(new QueryWrapper<>());
@@ -97,6 +100,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/alipay"})
     public R alipay(String appid, String privateKey, String alipayPublicKey) {
         PayAlipayConfig payAlipayConfig = (PayAlipayConfig) this.payAlipayConfigService.getOne(new QueryWrapper<>());
@@ -113,6 +117,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/applet"})
     public R applet(String appid, String secret) {
         AppletConfig applet = (AppletConfig) this.appletConfigService.getOne(new QueryWrapper<>());
@@ -128,6 +133,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/official"})
     public R official(String appid, String appSecret, String officialName, String officialImage) {
         OfficialConfig officialConfig = (OfficialConfig) this.officialConfigService.getOne(new QueryWrapper<>());
@@ -146,6 +152,7 @@ public class ConfigController {
     }
 
     // 后台保存配置（此处建议增加 brands 字段参数，如果前端有传brands就加上，否则原逻辑即可）
+    @RequiresRoles("Admin")
     @RequestMapping({"/configure"})
     public R configure(Integer extract, Integer indexAd, Integer marketing, Integer onlinePayment, Integer onlineAlipay, Integer onlineCustomer, String paymentProvider, Integer paymentPolling, String paymentRouting, Integer wechatLogin, Integer appleLogin, Integer examine, Integer version, String brands, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -175,6 +182,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/system"})
     public R applet(String serviceUrl, String galleryUrl, String galleryRoute, String websiteTitle, String menuTitle, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -194,6 +202,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/article"})
     public R article(@ModelAttribute ArticleConfig requestData) {
         ArticleConfig articleConfig = (ArticleConfig) this.articleConfigService.getOne(new QueryWrapper<>());
@@ -208,6 +217,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/message"})
     public R message(String accessKeyId, String accessKeySecret, String regionId, String signName, String templateCode) {
         MessageConfig messageConfig = (MessageConfig) this.messageConfigService.getOne(new QueryWrapper<>());
@@ -226,6 +236,7 @@ public class ConfigController {
         return R.success(Boolean.valueOf(saveOrUpdate));
     }
 
+    @RequiresRoles("Admin")
     @RequestMapping({"/preset"})
     public R preset(String defaultPortrait, String projectPortrait, HttpSession session) {
         PresetConfig presetConfig = (PresetConfig) this.presetConfigService.getOne(new QueryWrapper<>());

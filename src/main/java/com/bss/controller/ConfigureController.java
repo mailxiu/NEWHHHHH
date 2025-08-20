@@ -12,6 +12,7 @@ import com.bss.entity.Configure;
 import com.bss.entity.OfficialConfig;
 import com.bss.entity.PayVo;
 import com.bss.entity.User;
+import org.apache.shiro.authz.annotation.RequiresRoles; // 记得引入Shiro注解
 import com.bss.service.ConfigureService;
 import com.bss.service.impl.OfficialConfigServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +63,7 @@ public class ConfigureController extends ApiController {
         return success(data);
     }
 
+    @RequiresRoles("Admin")
     @PostMapping({"/updatePay"})
     public R updatePay(PayVo payVo, HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -81,6 +83,7 @@ public class ConfigureController extends ApiController {
         return success(Boolean.valueOf(update));
     }
 
+    @RequiresRoles("Admin")
     @PutMapping
     public R update(@RequestBody Configure configure) {
         return success(Boolean.valueOf(this.configureService.updateById(configure)));
