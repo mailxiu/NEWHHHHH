@@ -183,7 +183,7 @@
 /* 183 */         settlement.setSid(member.getUid());
 /* 184 */         settlement.setUid(direct_member.getUid());
 /* 185 */         settlement.setType("升级分佣");
-/* 186 */         settlement.setNotes("源自：直推下级" + member.getUid() + ",升级" + grade.getName());
+/* 186 */         settlement.setNotes("源自直推下级" + member.getUid() + ",升级" + grade.getName());
 /* 187 */         settlement.setTotal(direct_total);
 /*     */         
 /* 189 */         this.settlementService.save(settlement);
@@ -211,7 +211,7 @@
 /* 211 */         settlement_one.setSid(member.getUid());
 /* 212 */         settlement_one.setUid(indirect_member.getUid());
 /* 213 */         settlement_one.setType("升级分佣");
-/* 214 */         settlement_one.setNotes("源自：间推下级" + member.getUid() + ",升级" + grade.getName());
+/* 214 */         settlement_one.setNotes("源自间推下级" + member.getUid() + ",升级" + grade.getName());
 /* 215 */         settlement_one.setTotal(indirect_total);
 /*     */         
 /* 217 */         this.settlementService.save(settlement_one);

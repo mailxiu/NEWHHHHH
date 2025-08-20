@@ -1,61 +1,49 @@
-/*      */ package com.bss.controller;
-/*      */ import cn.hutool.core.util.RandomUtil;
+package com.bss.controller;
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
-/*      */ import com.alibaba.fastjson.JSONArray;
-/*      */ import com.alibaba.fastjson.JSONObject;
-/*      */ import com.baomidou.mybatisplus.core.conditions.Wrapper;
-/*      */ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-/*      */ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-/*      */ import com.baomidou.mybatisplus.core.metadata.IPage;
-/*      */ import com.baomidou.mybatisplus.extension.api.R;
-/*      */ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-/*      */ import com.bss.entity.Grade;
-/*      */ import com.bss.entity.Member;
-/*      */ import com.bss.entity.Project;
-/*      */ import com.bss.entity.Record;
-/*      */ import com.bss.entity.Settlement;
-/*      */ import com.bss.entity.Stock;
-/*      */ import com.bss.entity.User;
-/*      */ import java.io.BufferedOutputStream;
-/*      */ import java.io.OutputStream;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bss.entity.Grade;
+import com.bss.entity.Member;
+import com.bss.entity.Project;
+import com.bss.entity.Record;
+import com.bss.entity.Settlement;
+import com.bss.entity.Stock;
+import com.bss.entity.User;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-/*      */ import java.io.Serializable;
-/*      */ import java.math.BigDecimal;
-/*      */ import java.math.RoundingMode;
-/*      */ import java.text.DateFormat;
-/*      */ import java.text.DecimalFormat;
-/*      */ import java.text.NumberFormat;
-/*      */ import java.text.SimpleDateFormat;
-/*      */ import java.util.*;
-/*      */
-/*      */
-/*      */
-/*      */
-/*      */
-/*      */
-/*      */ import java.util.concurrent.ConcurrentHashMap;
-/*      */ import java.util.concurrent.CountDownLatch;
-/*      */ import java.util.concurrent.locks.Lock;
-/*      */ import java.util.concurrent.locks.ReentrantLock;
-/*      */ import java.util.stream.Collectors;
-/*      */ import javax.annotation.Resource;
-/*      */ import javax.servlet.ServletOutputStream;
-/*      */ import javax.servlet.http.HttpServletResponse;
-/*      */ import javax.servlet.http.HttpSession;
-/*      */ import com.bss.service.ProjectService;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import com.bss.service.ProjectService;
 import com.bss.service.impl.*;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.bss.utils.R.success;
-/*      */
-/*      */
-/*      */
-/*      */
-/*      */
 
-/*      */
 /*      */ @RestController
 /*      */ @RequestMapping({"record"})
 /*      */ public class RecordController extends ApiController {
@@ -180,75 +168,120 @@ import static com.bss.utils.R.success;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */ 
+/*      */ @GetMapping("/summaryByCode")
+public R summaryByCode(String uid, String state, @RequestParam(name = "sale", defaultValue = "1") Integer sale) {
+    Member member = (Member)this.memberService.getOne(new QueryWrapper<Member>().eq("uid", uid));
+    if (member == null) {
+        log.info("查询会员为空：uid->{}", uid);
+        return success(new ArrayList<>());
+    }
+
+    QueryWrapper<Record> wrapper = new QueryWrapper<>();
+    wrapper.eq("merchant", member.getMerchant());
+    wrapper.eq("uid", uid);
+    wrapper.eq("state", state);
+    wrapper.eq("sale", sale);
+
+    // 查所有，不分页
+    List<Record> allRecords = this.recordService.list(wrapper);
+
+    // 按 code 聚合
+    Map<String, List<Record>> codeGroups = allRecords.stream().collect(Collectors.groupingBy(Record::getCode));
+    List<Map<String, Object>> result = new ArrayList<>();
+
+    for (Map.Entry<String, List<Record>> entry : codeGroups.entrySet()) {
+        Record first = entry.getValue().get(0);
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", first.getCode());
+        map.put("name", first.getName());
+        map.put("image", first.getImage());
+        map.put("points", first.getPoints());
+        map.put("state", first.getState());
+        map.put("sale", first.getSale());
+        map.put("updateTime", first.getUpdateTime());
+        map.put("totalCount", entry.getValue().size()); // 统计同 code 数量
+        result.add(map);
+    }
+
+    return success(result);
+}
 /*      */ 
 /*      */ 
 /*      */ 
 /*      */ 
 /*      */   
-/*      */   @GetMapping({"/getList"})
-/*      */   public R getList(@RequestParam(name = "pageIndex") Integer pageIndex, String uid, String state, @RequestParam(name = "sale", defaultValue = "0") Integer sale) {
-/*  182 */     Member member = (Member)this.memberService.getOne((Wrapper)(new QueryWrapper()).eq("uid", uid));
-/*      */     
-/*  184 */     if (member == null) {
-/*  185 */       log.info("查询会员为空：uid->{}", uid);
-/*  186 */       return success(new ArrayList());
-/*      */     } 
-/*      */     
-/*  189 */     if (sale.intValue() == 1) {
-/*  190 */       QueryWrapper<Record> queryWrapper = new QueryWrapper();
-/*      */       
-/*  192 */       queryWrapper.eq("merchant", member.getMerchant());
-/*  193 */       queryWrapper.eq("uid", uid);
-/*  194 */       queryWrapper.eq("state", state);
-/*  195 */       queryWrapper.eq("sale", sale);
-/*      */       
-/*  197 */       IPage<Record> iPage1 = this.recordService.page((IPage)new Page(pageIndex.intValue(), 12L), (Wrapper)queryWrapper);
-/*  198 */       return success(iPage1.getRecords());
-/*      */     } 
-/*      */     
-/*  201 */     QueryWrapper<Record> saleWrapper = new QueryWrapper();
-/*      */     
-/*  203 */     saleWrapper.eq("merchant", member.getMerchant());
-/*  204 */     saleWrapper.eq("uid", uid);
-/*  205 */     saleWrapper.eq("state", state);
-/*  206 */     saleWrapper.eq("sale", sale);
-/*  207 */     saleWrapper.groupBy("code");
-/*      */     
-/*  209 */     IPage<Record> iPage = this.recordService.page((IPage)new Page(pageIndex.intValue(), 12L), (Wrapper)saleWrapper);
-/*      */     
-/*  211 */     List<Record> list = iPage.getRecords();
-/*      */     
-/*  213 */     JSONArray arr = (JSONArray)JSON.toJSON(list);
-/*      */     
-/*  215 */     for (int i = 0; i < arr.size(); i++) {
-/*      */       
-/*  217 */       JSONObject t = arr.getJSONObject(i);
-/*      */       
-/*  219 */       QueryWrapper<Record> countWrapper = new QueryWrapper();
-/*      */       
-/*  221 */       countWrapper.eq("merchant", member.getMerchant());
-/*  222 */       countWrapper.eq("code", t.getString("code"));
-/*  223 */       countWrapper.eq("uid", uid);
-/*  224 */       countWrapper.eq("state", state);
-/*  225 */       countWrapper.eq("sale", sale);
-/*  226 */       countWrapper.groupBy("code");
-/*      */       
-/*  228 */       Project project = (Project)this.projectService.getOne((Wrapper)((QueryWrapper)(new QueryWrapper()).eq("merchant", member.getMerchant())).eq("bar_code", t.getString("code")));
-/*      */       
-/*  230 */       int count = this.recordService.count((Wrapper)countWrapper);
-/*      */       
-/*  232 */       t.put("total", Integer.valueOf(count));
-/*      */       
-/*  234 */       if (project != null) {
-/*  235 */         t.put("project_state", project.getState());
-/*      */       }
-/*      */     } 
-/*      */ 
-/*      */ 
-/*      */     
-/*  241 */     return success(arr);
-/*      */   }
+/*      */  @GetMapping({"/getList"})
+public R getList(@RequestParam(name = "pageIndex") Integer pageIndex,
+                 @RequestParam(name = "uid") String uid,
+                 @RequestParam(name = "state") String state,
+                 @RequestParam(name = "sale", defaultValue = "0") Integer sale,
+                 @RequestParam(name = "code", required = false) String code) {
+    Member member = (Member) this.memberService.getOne(new QueryWrapper<Member>().eq("uid", uid));
+    if (member == null) {
+        log.info("查询会员为空：uid->{}", uid);
+        return success(new ArrayList<>());
+    }
+
+    // 如果 code 不为空，优先按 code 精确筛选
+    if (code != null && !code.isEmpty()) {
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("merchant", member.getMerchant());
+        queryWrapper.eq("uid", uid);
+        queryWrapper.eq("state", state);
+        queryWrapper.eq("sale", sale);
+        queryWrapper.eq("code", code); // 只加这一个筛选条件
+        queryWrapper.orderByDesc("update_time"); // 按更新时间倒序排序
+        IPage<Record> iPage = this.recordService.page(new Page(pageIndex, 12L), queryWrapper);
+        return success(iPage.getRecords());
+    }
+
+    // code为空，完全按原来的逻辑分 sale == 1 和 != 1
+    if (sale.intValue() == 1) {
+        QueryWrapper<Record> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("merchant", member.getMerchant());
+        queryWrapper.eq("uid", uid);
+        queryWrapper.eq("state", state);
+        queryWrapper.eq("sale", sale);
+        queryWrapper.orderByDesc("update_time"); // 按更新时间倒序排序
+        IPage<Record> iPage1 = this.recordService.page(new Page(pageIndex, 12L), queryWrapper);
+        return success(iPage1.getRecords());
+    }
+
+    QueryWrapper<Record> saleWrapper = new QueryWrapper<>();
+    saleWrapper.eq("merchant", member.getMerchant());
+    saleWrapper.eq("uid", uid);
+    saleWrapper.eq("state", state);
+    saleWrapper.eq("sale", sale);
+    saleWrapper.groupBy("code");
+    saleWrapper.orderByDesc("update_time"); // 按更新时间倒序排序
+
+    IPage<Record> iPage = this.recordService.page(new Page(pageIndex, 12L), saleWrapper);
+    List<Record> list = iPage.getRecords();
+    JSONArray arr = (JSONArray) JSON.toJSON(list);
+
+    for (int i = 0; i < arr.size(); i++) {
+        JSONObject t = arr.getJSONObject(i);
+        QueryWrapper<Record> countWrapper = new QueryWrapper<>();
+        countWrapper.eq("merchant", member.getMerchant());
+        countWrapper.eq("code", t.getString("code"));
+        countWrapper.eq("uid", uid);
+        countWrapper.eq("state", state);
+        countWrapper.eq("sale", sale);
+        countWrapper.groupBy("code");
+
+        Project project = (Project) this.projectService.getOne(
+                new QueryWrapper<Project>().eq("merchant", member.getMerchant()).eq("bar_code", t.getString("code"))
+        );
+        int count = this.recordService.count(countWrapper);
+        t.put("total", count);
+
+        if (project != null) {
+            t.put("project_state", project.getState());
+        }
+    }
+
+    return success(arr);
+}
 /*      */ 
 /*      */ 
 /*      */ 
@@ -582,7 +615,7 @@ import static com.bss.utils.R.success;
 /*  573 */       settlement.setId(Integer.valueOf(0));
 /*  574 */       settlement.setUid(member.getUid());
 /*  575 */       settlement.setType("回收结算");
-/*  576 */       settlement.setNotes("卖出：" + record.getName());
+/*  576 */       settlement.setNotes("单个结算" + record.getName());
 /*  577 */       settlement.setTotal(record.getPoints());
 /*      */       
 /*  579 */       this.settlementService.save(settlement);
@@ -609,7 +642,7 @@ import static com.bss.utils.R.success;
 /*  600 */           t_settlement.setSid(member.getUid());
 /*  601 */           t_settlement.setUid(t_member.getUid());
 /*  602 */           t_settlement.setType("卖货提成");
-/*  603 */           t_settlement.setNotes("来自：下级" + member.getUid() + "卖出:" + record.getName());
+/*  603 */           t_settlement.setNotes("来自下级" + member.getUid() + "卖出" + record.getName());
 /*  604 */           t_settlement.setTotal(rebate);
 /*      */           
 /*  606 */           this.settlementService.save(t_settlement);
@@ -973,7 +1006,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
                 settlement.setId(0);
                 settlement.setUid(member.getUid());
                 settlement.setType("回收结算");
-                settlement.setNotes("卖出:【" + record.getName() + "】，单价:" + record.getPoints() + "元");
+                settlement.setNotes("批量结算" + record.getName() + "，单价" + record.getPoints() + "元");
                 settlement.setTotal(codeRecords.stream().mapToDouble(r -> r.getPoints()).sum());
                 this.settlementService.save(settlement);
             }
@@ -996,7 +1029,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
                         t_settlement.setSid(member.getUid());
                         t_settlement.setUid(t_member.getUid());
                         t_settlement.setType("卖货提成");
-                        t_settlement.setNotes("源自:下级" + member.getUid() + "卖出:【" + record.getName() + "】");
+                        t_settlement.setNotes("源自下级" + member.getUid() + "卖出" + record.getName());
                         t_settlement.setTotal(rebate.doubleValue());
                         this.settlementService.save(t_settlement);
                         this.memberService.saveOrUpdate(t_member);
@@ -1177,7 +1210,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /* 1206 */         settlement.setId(Integer.valueOf(0));
 /* 1207 */         settlement.setUid(member.getUid());
 /* 1208 */         settlement.setType("回收结算");
-/* 1209 */         settlement.setNotes("卖出:" + record.getName() + ",单价:" + record.getPoints() + "元");
+/* 1209 */         settlement.setNotes("批量结算" + record.getName() + ",单价" + record.getPoints() + "元");
 /* 1210 */         settlement.setTotal(Double.valueOf(((BigDecimal)entry.getValue()).doubleValue()));
 /*      */         
 /* 1212 */         this.settlementService.save(settlement);
@@ -1199,7 +1232,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /* 1228 */             t_settlement.setSid(member.getUid());
 /* 1229 */             t_settlement.setUid(t_member.getUid());
 /* 1230 */             t_settlement.setType("卖货提成");
-/* 1231 */             t_settlement.setNotes("源自:下级" + member.getUid() + "卖出:" + record.getName());
+/* 1231 */             t_settlement.setNotes("源自下级" + member.getUid() + "卖出" + record.getName());
 /* 1232 */             t_settlement.setTotal(Double.valueOf(rebate.doubleValue()));
 /*      */             
 /* 1234 */             this.settlementService.save(t_settlement);
@@ -1392,7 +1425,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /* 1421 */         settlement.setId(Integer.valueOf(0));
 /* 1422 */         settlement.setUid(member.getUid());
 /* 1423 */         settlement.setType("回收结算");
-/* 1424 */         settlement.setNotes("卖出:" + record.getName() + ",单价:" + record.getPoints() + "元");
+/* 1424 */         settlement.setNotes("批量结算" + record.getName() + ",单价" + record.getPoints() + "元");
 /* 1425 */         settlement.setTotal(Double.valueOf(((BigDecimal)entry.getValue()).doubleValue()));
 /*      */         
 /* 1427 */         this.settlementService.save(settlement);
@@ -1414,7 +1447,7 @@ public R effective(@RequestParam List<Long> idList, HttpSession session) {
 /* 1443 */             t_settlement.setSid(member.getUid());
 /* 1444 */             t_settlement.setUid(t_member.getUid());
 /* 1445 */             t_settlement.setType("卖货提成");
-/* 1446 */             t_settlement.setNotes("源自:下级" + member.getUid() + "卖出:" + record.getName());
+/* 1446 */             t_settlement.setNotes("源自下级" + member.getUid() + "卖出" + record.getName());
 /* 1447 */             t_settlement.setTotal(Double.valueOf(rebate.doubleValue()));
 /*      */             
 /* 1449 */             this.settlementService.save(t_settlement);

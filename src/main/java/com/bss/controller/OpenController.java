@@ -335,7 +335,7 @@ import javax.servlet.http.HttpSession;
 /*     */       
 /* 305 */       model.addAttribute("isWeChat", Boolean.valueOf(true));
 /*     */       
-/* 307 */       return "redirect:https://www.pgyer.com/yshs";
+/* 307 */       return "redirect:https://xz.mailxiuzx.com";
 /*     */     } 
 /*     */ 
 /*     */     
@@ -383,7 +383,7 @@ import javax.servlet.http.HttpSession;
 /*     */     
 /* 353 */     model.addAttribute("isWeChat", Boolean.valueOf(true));
 /*     */     
-/* 355 */     return "redirect:https://www.pgyer.com/yshs";
+/* 355 */     return "redirect:https://xz.mailxiuzx.com";
 /*     */   }
 /*     */ 
 /*     */ 

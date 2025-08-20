@@ -460,7 +460,7 @@
 /* 460 */         settlement.setSid(member.getUid());
 /* 461 */         settlement.setUid(top_member.getUid());
 /* 462 */         settlement.setType("升级分佣");
-/* 463 */         settlement.setNotes("源自：下级" + member.getUid() + ",做任务升级会员");
+/* 463 */         settlement.setNotes("源自下级" + member.getUid() + ",做任务升级会员");
 /* 464 */         settlement.setTotal(bonus);
 /*     */         
 /* 466 */         this.settlementService.save(settlement);
